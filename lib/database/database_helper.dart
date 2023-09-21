@@ -1,10 +1,13 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'produto.dart';
 import 'cor.dart';
 import 'package:logger/logger.dart';
+
+//================================================< DataBase >===================================================//
 
 class DatabaseProvider {
   static const _databaseName = 'seu_banco.db';
@@ -22,6 +25,8 @@ class DatabaseProvider {
     _database = await _initDatabase();
     return _database;
   }
+
+//================================================< Inicialziar >===================================================//
 
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
@@ -43,6 +48,12 @@ class DatabaseProvider {
     return db;
   }
 
+  Future<void> initializeDatabase() async {
+    _database = await _initDatabase();
+  }
+
+//================================================< Tabela Produtos >===================================================//
+
   Future<void> _createDatabase(Database db, int version) async {
     await db.execute('''
     CREATE TABLE produtos (
@@ -55,6 +66,8 @@ class DatabaseProvider {
       preco REAL
     )
   ''');
+
+//================================================< Tabela Cores >===================================================//
 
     await db.execute('''
     CREATE TABLE cores (
@@ -78,14 +91,55 @@ class DatabaseProvider {
     ];
 
     for (final corData in cores) {
-      final result = await db.insert('cores', corData);
-      if (result != null) {
-        logger.d('Cor inserida com sucesso: ${corData['nome']}');
-      } else {
-        logger.e('Falha ao inserir cor: ${corData['nome']}');
-      }
+      await db.insert('cores', corData);
+    }
+
+//===========================================< Tabela Cores Combinantes >=============================================//
+
+    await db.execute('''
+      CREATE TABLE cores_combinantes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        corPrincipal TEXT,
+        codigoCorPrincipal TEXT, 
+        corCombinante TEXT,
+        codigoCorCombinante TEXT  
+      )
+  ''');
+
+    final coresCombinantes = [
+      {
+        'corPrincipal': 'Azul',
+        'codigoCorPrincipal': '#0000FF',
+        'corCombinante': 'Azul',
+        'codigoCorCombinante': '#0000FF'
+      },
+      {
+        'corPrincipal': 'Azul',
+        'codigoCorPrincipal': '#0000FF',
+        'corCombinante': 'Verde',
+        'codigoCorCombinante': '#00FF00'
+      },
+      {
+        'corPrincipal': 'Vermelho',
+        'codigoCorPrincipal': '#FF0000',
+        'corCombinante': 'Vermelho',
+        'codigoCorCombinante': '#FF0000'
+      },
+      {
+        'corPrincipal': 'Vermelho',
+        'codigoCorPrincipal': '#FF0000',
+        'corCombinante': 'Roxo',
+        'codigoCorCombinante': '#800080'
+      },
+      // Adicione outras relações de cores combinantes conforme necessário
+    ];
+
+    for (final relacao in coresCombinantes) {
+      await db.insert('cores_combinantes', relacao);
     }
   }
+
+//==============================================< GetCores e Combinantes >===============================================//
 
   Future<List<Cor>> getCores() async {
     final db = await database;
@@ -98,6 +152,49 @@ class DatabaseProvider {
       );
     });
   }
+
+  Future<List<String>> getCoresCombinantes(
+      String nomeCor, String codigoCorPrincipal) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(
+      'SELECT corCombinante, codigoCorCombinante FROM cores_combinantes WHERE corPrincipal = ? OR codigoCorPrincipal = ?',
+      [nomeCor, codigoCorPrincipal],
+    );
+
+    return List.generate(maps.length, (i) {
+      return maps[i]['codigoCorCombinante'];
+    });
+  }
+
+//==============================================< GetProdutos P Cor >===============================================//
+
+    
+Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
+  debugPrint('Cores para buscar: ($coresCombinantes)');
+  final db = await database;
+
+  final placeholders = List.filled(coresCombinantes.length, '?').join(', ');
+
+  final List<Map<String, dynamic>> maps = await db.rawQuery(
+    'SELECT * FROM produtos WHERE cor IN ($placeholders)', coresCombinantes,
+  );
+
+  return List.generate(maps.length, (i) {
+    return Produto(
+      id: maps[i]['id'],
+      imagem: maps[i]['imagem'],
+      nome: maps[i]['nome'],
+      cor: maps[i]['cor'],
+      corNome: maps[i]['corNome'],
+      tamanho: maps[i]['tamanho'],
+      preco: maps[i]['preco'],
+    );
+  });
+}
+
+
+//================================================< GetProdutos >===================================================//
 
   Future<List<Produto>> getProdutos() async {
     final db = await database;
@@ -118,39 +215,17 @@ class DatabaseProvider {
     });
   }
 
+//==========================================< Insert e Delete Produto >=============================================//
+
   Future<void> insertProduto(Produto produto) async {
     final db = await database;
     await db.insert('produtos', produto.toMap());
-  }
-
-  Future<List<Produto>> getProdutosPorCor(String cor, String corNome) async {
-    final db = await database;
-
-    final List<Map<String, dynamic>> maps = await db.query(
-      'produtos',
-      where: 'cor = ? AND corNome = ?',
-      whereArgs: [cor, corNome],
-    );
-
-    return List.generate(maps.length, (i) {
-      return Produto(
-        id: maps[i]['id'],
-        imagem: maps[i]['imagem'],
-        nome: maps[i]['nome'],
-        cor: maps[i]['cor'],
-        corNome: maps[i]['corNome'],
-        tamanho: maps[i]['tamanho'],
-        preco: maps[i]['preco'],
-      );
-    });
   }
 
   Future<void> deleteAllProdutos() async {
     final db = await database;
     await db.delete('produtos');
   }
-
-  Future<void> initializeDatabase() async {
-    _database = await _initDatabase();
-  }
 }
+
+//====================================================< Fim >=======================================================//

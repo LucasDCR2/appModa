@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import '../database/produto.dart';
 import '../database/database_helper.dart';
-import 'widget_prod_catalogo.dart';
+import 'widgets/widget_produtos_catalogo.dart';
 import 'detalhes.dart'; 
 
 class CatalogoPage extends StatelessWidget {
