@@ -5,6 +5,7 @@ class Produto {
   Uint8List? imagem;
   String nome;
   String cor;
+  String corNome; 
   String tamanho;
   double preco;
 
@@ -13,6 +14,7 @@ class Produto {
     this.imagem, 
     required this.nome,
     required this.cor,
+    required this.corNome, 
     required this.tamanho,
     required this.preco,
   });
@@ -23,8 +25,10 @@ class Produto {
       'imagem': imagem, 
       'nome': nome,
       'cor': cor,
+      'corNome': corNome, 
       'tamanho': tamanho,
       'preco': preco,
     };
   }
 }
+

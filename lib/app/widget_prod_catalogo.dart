@@ -17,7 +17,7 @@ class ProdutoItem extends StatelessWidget {
           Image.memory(
             produto.imagem!,
             width: double.infinity,
-            height: 200, 
+            height: 200,
             fit: BoxFit.cover,
           ),
           Padding(
@@ -32,9 +32,27 @@ class ProdutoItem extends StatelessWidget {
                     fontSize: 16.0,
                   ),
                 ),
-                const SizedBox(height: 8.0),
-                Text('Tamanho: ${produto.tamanho}'),
-                Text('R\$ ${produto.preco.toStringAsFixed(2)}'),
+                const SizedBox(height: 12.0),
+                Row(
+                  children: [
+                    Text(
+                      'Cor: ${produto.corNome}',
+                    ),
+                    const SizedBox(width: 6.0),
+                    Container(
+                      width: 16, 
+                      height: 16, 
+                      decoration: BoxDecoration(
+                        color: Color(int.parse('0xFF${produto.cor.substring(1)}')),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 2),
+                Text('R\$ ${produto.preco.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold)),
               ],
             ),
           ),

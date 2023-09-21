@@ -152,15 +152,15 @@ class _AdminPageState extends State<AdminPage> {
                                       width: 50,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
+                                        color: Color(int.parse(
+                                            '0xFF${cor.cor.substring(1)}')),
                                         border: Border.all(
                                           color: isSelected
                                               ? Colors.black
                                               : Colors.black,
                                           width: 1,
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                     ),
                                   ),
@@ -185,7 +185,8 @@ class _AdminPageState extends State<AdminPage> {
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text('Atenção!'),
-                                content: const Text('Campos incompletos'),
+                                content: const Text(
+                                    'Campos incompletos'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -310,6 +311,7 @@ class _AdminPageState extends State<AdminPage> {
           imagem: bytes,
           nome: nome,
           cor: _corSelecionada!.cor,
+          corNome: _corSelecionada!.nome,
           tamanho: tamanho,
           preco: preco,
         );

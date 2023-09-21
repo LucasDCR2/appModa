@@ -1,7 +1,9 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, unnecessary_string_interpolations
+// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables, unnecessary_string_interpolations, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:teste1/database/produto.dart';
+import 'package:teste1/database/database_helper.dart';
+import 'produtos_relacao.dart';
 
 class DetalhesPage extends StatelessWidget {
   final Produto produto;
@@ -29,9 +31,7 @@ class DetalhesPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
                 DetalhesProdutoWidget(produto: produto),
-                
                 const SizedBox(height: 20),
                 const Divider(
                   color: Colors.grey, // Cor do risco cinza
@@ -40,7 +40,15 @@ class DetalhesPage extends StatelessWidget {
                   indent: 10, // Recuo à esquerda do risco
                   endIndent: 10, // Recuo à direita do risco
                 ),
+                const Text(
+                  'Produtos Relacionados',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+                ProdutosComMesmaCorWidget(cor: produto.cor, corNome: produto.corNome, produtoAtual: produto,
+                ),
               ],
+
             ),
           ),
         ),
@@ -48,7 +56,6 @@ class DetalhesPage extends StatelessWidget {
     );
   }
 }
-
 
 class DetalhesProdutoWidget extends StatelessWidget {
   final Produto produto;
@@ -94,15 +101,12 @@ class DetalhesProdutoWidget extends StatelessWidget {
               height: 20, // Altura da caixa de cor
               decoration: BoxDecoration(
                 color: Color(int.parse('0xFF${produto.cor.substring(1)}')),
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
-                ),
+                borderRadius: BorderRadius.circular(5),
               ),
             ),
-            const SizedBox(width: 8), // Espaçamento entre a caixa de cor e o texto
+            const SizedBox(width: 8),
             Text(
-              'Cor: ${produto.cor}',
+              'Cor: ${produto.corNome}',
               style: const TextStyle(fontSize: 16),
             ),
           ],
