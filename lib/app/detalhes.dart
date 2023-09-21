@@ -29,8 +29,9 @@ class DetalhesPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                
                 DetalhesProdutoWidget(produto: produto),
-
+                
                 const SizedBox(height: 20),
                 const Divider(
                   color: Colors.grey, // Cor do risco cinza
@@ -85,10 +86,28 @@ class DetalhesProdutoWidget extends StatelessWidget {
           ),
         // Exibir as informações do produto aqui
         const SizedBox(height: 10),
-        Text(
-          'Cor: ${produto.cor}',
-          style: const TextStyle(fontSize: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 20, // Largura da caixa de cor
+              height: 20, // Altura da caixa de cor
+              decoration: BoxDecoration(
+                color: Color(int.parse('0xFF${produto.cor.substring(1)}')),
+                border: Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8), // Espaçamento entre a caixa de cor e o texto
+            Text(
+              'Cor: ${produto.cor}',
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
         ),
+        const SizedBox(height: 10),
         Text(
           'Tamanho: ${produto.tamanho}',
           style: const TextStyle(fontSize: 16),
