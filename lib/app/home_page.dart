@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
-import '../app/catalogo_page.dart';
-import '../app/admin_page.dart';
+import 'catalogo_page.dart';
+import 'admin_page.dart';
 
 class HomePage extends StatelessWidget {
   final VoidCallback trocarTema; 
@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LookApp'),
+        title: const Text('Tonalize', style: TextStyle(),),
         centerTitle: true,
         actions: [
           IconButton(

@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
-import 'package:teste1/database/produto.dart';
+import 'package:tonalize/database/produto.dart';
 import 'widgets/widget_produtos_relacao.dart';
 import 'widgets/widget_detalhes_body.dart';
 
