@@ -1,6 +1,7 @@
-// ignore_for_file: library_private_types_in_public_api, unused_field, use_build_context_synchronously
+// ignore_for_file: library_private_types_in_public_api, unused_field, use_build_context_synchronously, unused_element, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/database_helper.dart';
 import '../database/produto.dart';
@@ -46,10 +47,14 @@ class _AdminPageState extends State<AdminPage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text('Conteúdo da Administração aqui'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 50),
+            const Text(
+              'Conteúdo da Administração',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 100),
             ElevatedButton.icon(
               onPressed: () {
                 _mostrarBottomSheet(context);
@@ -63,13 +68,13 @@ class _AdminPageState extends State<AdminPage> {
                 padding: const EdgeInsets.all(16),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             ElevatedButton.icon(
-              onPressed: () async {
-                await _excluirProdutosDialog(context);
+              onPressed: () {
+                _mostrarBottomSheetAdicionarCor(context);
               },
-              icon: const Icon(Icons.delete),
-              label: const Text('Excluir Todos os Produtos'),
+              icon: const Icon(Icons.add),
+              label: const Text('Adicionar Cores'),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
@@ -77,6 +82,36 @@ class _AdminPageState extends State<AdminPage> {
                 padding: const EdgeInsets.all(16),
               ),
             ),
+            const SizedBox(height: 40),
+            ElevatedButton.icon(
+              onPressed: () {
+                _mostrarBottomSheetCombinarCores(context);
+              },
+              icon: const Icon(Icons.color_lens),
+              label: const Text('Combinar Cores'),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+            const SizedBox(height: 40),
+            ElevatedButton.icon(
+              onPressed: () async {
+                await _excluirProdutosDialog(context);
+              },
+              icon: const Icon(Icons.delete),
+              label: const Text('Excluir Todos os Produtos'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                padding: const EdgeInsets.all(16),
+              ),
+            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
@@ -160,7 +195,8 @@ class _AdminPageState extends State<AdminPage> {
                                               : Colors.black,
                                           width: 1,
                                         ),
-                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
                                       ),
                                     ),
                                   ),
@@ -185,8 +221,7 @@ class _AdminPageState extends State<AdminPage> {
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text('Atenção!'),
-                                content: const Text(
-                                    'Campos incompletos'),
+                                content: const Text('Campos incompletos'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -220,6 +255,264 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
+  void _mostrarBottomSheetAdicionarCor(BuildContext context) {
+    TextEditingController nomeController = TextEditingController();
+    TextEditingController codigoController = TextEditingController();
+    Color selectedColor = Colors.white;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.all(16.0),
+                      children: [
+                        const SizedBox(height: 20),
+                        const Center(
+                          child: Text('Adicionar Nova Cor:'),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: nomeController,
+                          labelText: 'Nome da Cor',
+                        ),
+                        _buildTextField(
+                          controller: codigoController,
+                          labelText: 'Código da Cor',
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 50),
+                            const Text(
+                              'Selecione uma Cor: ',
+                              style: TextStyle(fontSize: 24),
+                            ),
+                            const SizedBox(height: 20),
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('Selecione uma Cor'),
+                                      content: SingleChildScrollView(
+                                        child: ColorPicker(
+                                          pickerColor: selectedColor,
+                                          onColorChanged: (Color color) {
+                                            setState(() {
+                                              selectedColor = color;
+                                              codigoController.text =
+                                                  '#${color.value.toRadixString(16).substring(2)}';
+                                            });
+                                          },
+                                          colorPickerWidth: 300.0,
+                                          pickerAreaHeightPercent: 0.9,
+                                          enableAlpha: false,
+                                          displayThumbColor: true,
+                                          paletteType: PaletteType.hsv,
+                                          pickerAreaBorderRadius:
+                                              const BorderRadius.only(
+                                            topLeft: Radius.circular(2.0),
+                                            topRight: Radius.circular(2.0),
+                                          ),
+                                          labelTypes: [], // Desativar etiquetas
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Fechar'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: selectedColor,
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        String nome = nomeController.text;
+                        String codigo = codigoController.text;
+
+                        if (nome.isNotEmpty && codigo.isNotEmpty) {
+                          await _adicionarCor(nome, codigo);
+                          Navigator.of(context).pop();
+                          _carregarCoresDisponiveis();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Atenção!'),
+                                content: const Text(
+                                    'Nome e código da cor são obrigatórios.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Adicionar Cor'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10.0),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _mostrarBottomSheetCombinarCores(BuildContext context) {
+
+    final TextEditingController corPrincipalController = TextEditingController();
+    final TextEditingController codigoCorPrincipalController = TextEditingController();
+    final TextEditingController corCombinanteController = TextEditingController();
+    final TextEditingController codigoCorCombinanteController = TextEditingController();
+
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.all(16.0),
+                      children: [
+                        const SizedBox(height: 20),
+                        const Center(
+                          child: Text('Combinar Cores:'),
+                        ),
+                        const SizedBox(height: 20),
+                        _buildTextField(
+                          controller: corPrincipalController,
+                          labelText: 'Cor Principal',
+                        ),
+                        _buildTextField(
+                          controller: codigoCorPrincipalController,
+                          labelText: 'Código da Cor Principal',
+                        ),
+                        _buildTextField(
+                          controller: corCombinanteController,
+                          labelText: 'Cor Combinante',
+                        ),
+                        _buildTextField(
+                          controller: codigoCorCombinanteController,
+                          labelText: 'Código da Cor Combinante',
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        String corPrincipal = corPrincipalController.text;
+                        String codigoCorPrincipal =
+                            codigoCorPrincipalController.text;
+                        String corCombinante = corCombinanteController.text;
+                        String codigoCorCombinante =
+                            codigoCorCombinanteController.text;
+
+                        if (corPrincipal.isNotEmpty &&
+                            codigoCorPrincipal.isNotEmpty &&
+                            corCombinante.isNotEmpty &&
+                            codigoCorCombinante.isNotEmpty) {
+                          await _combinarCores(
+                            corPrincipal,
+                            codigoCorPrincipal,
+                            corCombinante,
+                            codigoCorCombinante,
+                          );
+                          Navigator.of(context).pop();
+                          _carregarCoresDisponiveis();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Atenção!'),
+                                content: const Text(
+                                    'Todos os campos são obrigatórios.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.add),
+                      label: const Text('Combinar Cores'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(10.0),
+                        minimumSize: const Size(double.infinity, 0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
@@ -233,52 +526,6 @@ class _AdminPageState extends State<AdminPage> {
           border: const OutlineInputBorder(),
         ),
       ),
-    );
-  }
-
-  Future<void> _excluirProdutosDialog(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Excluir Todos os Produtos?'),
-          content: const Text(
-              'Esta ação excluirá todos os produtos. Deseja continuar?'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Não',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await DatabaseProvider.instance.deleteAllProdutos();
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Todos os produtos foram excluídos.'),
-                  ),
-                );
-              },
-              child: const Text(
-                'Sim',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -332,5 +579,70 @@ class _AdminPageState extends State<AdminPage> {
         );
       }
     }
+  }
+
+  Future<void> _adicionarCor(String nome, String cor) async {
+    final db = await DatabaseProvider.instance.database;
+    await db.insert('cores', {'nome': nome, 'cor': cor});
+    debugPrint('Cor adicionada - Nome: $nome, Cor: $cor');
+  }
+
+  Future<void> _combinarCores(String corPrincipal, String codigoCorPrincipal,
+      String corCombinante, String codigoCorCombinante) async {
+    final db = await DatabaseProvider.instance.database;
+    await db.insert('cores_combinantes', {
+      'corPrincipal': corPrincipal,
+      'codigoCorPrincipal': codigoCorPrincipal,
+      'corCombinante': corCombinante,
+      'codigoCorCombinante': codigoCorCombinante,
+    });
+    debugPrint(
+        'Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
+  }
+
+  Future<void> _excluirProdutosDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Excluir Todos os Produtos?'),
+          content: const Text(
+              'Esta ação excluirá todos os produtos. Deseja continuar?'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Não',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await DatabaseProvider.instance.deleteAllProdutos();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Todos os produtos foram excluídos.'),
+                  ),
+                );
+              },
+              child: const Text(
+                'Sim',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
