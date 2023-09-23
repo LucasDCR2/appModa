@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
 import '../database/database_helper.dart';
+import 'gerenciar_cores_page.dart';
 import '../database/produto.dart';
 import '../database/cor.dart';
 import 'dart:typed_data';
+
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
@@ -19,6 +21,7 @@ class _AdminPageState extends State<AdminPage> {
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController tamanhoController = TextEditingController();
   final TextEditingController precoController = TextEditingController();
+  final TextEditingController nomeCorSelecionadaController = TextEditingController();
 
   Cor? _corSelecionada;
   Uint8List? _imagemBytes;
@@ -45,83 +48,106 @@ class _AdminPageState extends State<AdminPage> {
         title: const Text('Administração'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 50),
-            const Text(
-              'Conteúdo da Administração',
-              style: TextStyle(fontSize: 18),
-            ),
-            const SizedBox(height: 100),
-            ElevatedButton.icon(
-              onPressed: () {
-                _mostrarBottomSheet(context);
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Adicionar Produto'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                padding: const EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              const Text(
+                'Conteúdo da Administração',
+                style: TextStyle(fontSize: 18),
               ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              onPressed: () {
-                _mostrarBottomSheetAdicionarCor(context);
-              },
-              icon: const Icon(Icons.colorize_rounded),
-              label: const Text('Adicionar Cores'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+              const SizedBox(height: 70),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _mostrarBottomSheetAdicionarProduto(context);
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Adicionar Produto'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
                 ),
-                padding: const EdgeInsets.all(16),
               ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              onPressed: () {
-                _mostrarBottomSheetCombinarCores(context);
-              },
-              icon: const Icon(Icons.color_lens),
-              label: const Text('Combinar Cores'),
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _mostrarBottomSheetAdicionarCor(context);
+                },
+                icon: const Icon(Icons.colorize_rounded),
+                label: const Text('Adicionar Cores'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
                 ),
-                padding: const EdgeInsets.all(16),
               ),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton.icon(
-              onPressed: () async {
-                await _excluirProdutosDialog(context);
-              },
-              icon: const Icon(Icons.delete),
-              label: const Text('Excluir Todos os Produtos'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _mostrarBottomSheetCombinarCores(context);
+                },
+                icon: const Icon(Icons.color_lens),
+                label: const Text('Combinar Cores'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
                 ),
-                padding: const EdgeInsets.all(16),
               ),
-            ),
-            const SizedBox(height: 40),
-          ],
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GerenciarCoresPage(),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.color_lens),
+                label: const Text('Gerenciar Cores'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () async {
+                  await _excluirProdutosDialog(context);
+                },
+                icon: const Icon(Icons.delete),
+                label: const Text('Excluir Todos os Produtos'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  _mostrarBottomSheet(BuildContext context) {
+void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
+
     nomeController.clear();
     tamanhoController.clear();
     precoController.clear();
+    nomeCorSelecionadaController.clear();
     _corSelecionada = null;
 
     showModalBottomSheet(
@@ -141,7 +167,7 @@ class _AdminPageState extends State<AdminPage> {
                       children: [
                         const SizedBox(height: 20),
                         const Center(
-                          child: Text('Preencha as informações do produto:'),
+                          child: Text('Preencha as informações do produto:', style: TextStyle(fontSize: 16)),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(
@@ -155,6 +181,10 @@ class _AdminPageState extends State<AdminPage> {
                         _buildTextField(
                           controller: precoController,
                           labelText: 'Preço',
+                        ),
+                        _buildTextField(
+                          controller: nomeCorSelecionadaController,
+                          labelText: 'Nome da Cor Selecionada',
                         ),
                         const SizedBox(height: 20),
                         const Center(child: Text('Selecione uma Cor: ')),
@@ -179,6 +209,7 @@ class _AdminPageState extends State<AdminPage> {
                                   onTap: () {
                                     setState(() {
                                       _corSelecionada = cor;
+                                      nomeCorSelecionadaController.text = _corSelecionada != null ? _corSelecionada!.nome : '';
                                     });
                                   },
                                   child: Transform.scale(
@@ -187,8 +218,7 @@ class _AdminPageState extends State<AdminPage> {
                                       width: 50,
                                       height: 50,
                                       decoration: BoxDecoration(
-                                        color: Color(int.parse(
-                                            '0xFF${cor.cor.substring(1)}')),
+                                        color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
                                         border: Border.all(
                                           color: isSelected
                                               ? Colors.black
@@ -255,7 +285,7 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  void _mostrarBottomSheetAdicionarCor(BuildContext context) {
+void _mostrarBottomSheetAdicionarCor(BuildContext context) {
     TextEditingController nomeController = TextEditingController();
     TextEditingController codigoController = TextEditingController();
     Color selectedColor = Colors.white;
@@ -277,7 +307,7 @@ class _AdminPageState extends State<AdminPage> {
                       children: [
                         const SizedBox(height: 20),
                         const Center(
-                          child: Text('Adicionar Nova Cor:'),
+                          child: Text('Adicionar Nova Cor:', style: TextStyle(fontSize: 16)),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(
@@ -303,22 +333,21 @@ class _AdminPageState extends State<AdminPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Text('Selecione uma Cor'),
+                                      title: const Center(child: Text('Selecione uma Cor')),
                                       content: SingleChildScrollView(
                                         child: ColorPicker(
                                           pickerColor: selectedColor,
                                           onColorChanged: (Color color) {
                                             setState(() {
                                               selectedColor = color;
-                                              codigoController.text =
-                                                  '#${color.value.toRadixString(16).substring(2)}';
+                                              codigoController.text = '#${color.value.toRadixString(16).substring(2)}';
                                             });
                                           },
                                           colorPickerWidth: 300.0,
                                           pickerAreaHeightPercent: 0.9,
                                           enableAlpha: false,
                                           displayThumbColor: true,
-                                          paletteType: PaletteType.hsv,
+                                          paletteType: PaletteType.hueWheel,
                                           pickerAreaBorderRadius:
                                               const BorderRadius.only(
                                             topLeft: Radius.circular(2.0),
@@ -405,12 +434,12 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
- void _mostrarBottomSheetCombinarCores(BuildContext context) {
+void _mostrarBottomSheetCombinarCores(BuildContext context) {
   final TextEditingController corPrincipalController = TextEditingController();
   final TextEditingController codigoCorPrincipalController = TextEditingController();
   final TextEditingController corCombinanteController = TextEditingController();
   final TextEditingController codigoCorCombinanteController = TextEditingController();
-
+  
   Set<Cor> selectedColors = {};
 
   showModalBottomSheet(
@@ -430,7 +459,7 @@ class _AdminPageState extends State<AdminPage> {
                     children: [
                       const SizedBox(height: 20),
                       const Center(
-                        child: Text('Combinar Cores:'),
+                        child: Text('Combinar Cores:', style: TextStyle(fontSize: 16)),
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(
@@ -450,7 +479,7 @@ class _AdminPageState extends State<AdminPage> {
                         labelText: 'Código da Cor Combinante',
                       ),
                       const SizedBox(height: 20),
-                      const Center(child: Text('Selecione até duas cores:', style: TextStyle(fontSize: 16),)),
+                      const Center(child: Text('Selecione duas cores:', style: TextStyle(fontSize: 16),)),
                       Padding(
                         padding: const EdgeInsets.all(30.0),
                         child: Wrap(
@@ -465,20 +494,27 @@ class _AdminPageState extends State<AdminPage> {
                                 setState(() {
                                   if (isSelected) {
                                     selectedColors.remove(cor);
+                                      corPrincipalController.clear();
+  codigoCorPrincipalController.clear();
+  corCombinanteController.clear();
+  codigoCorCombinanteController.clear();
                                   } else {
                                     if (selectedColors.length < 2) {
                                       selectedColors.add(cor);
                                     }
                                   }
 
-                                  // Fill the controllers based on selection
                                   if (selectedColors.length == 1) {
                                     final selectedColor = selectedColors.first;
+
                                     corPrincipalController.text = selectedColor.nome;
                                     codigoCorPrincipalController.text = selectedColor.cor;
+
                                   } else if (selectedColors.length == 2) {
+
                                     final firstSelectedColor = selectedColors.first;
                                     final secondSelectedColor = selectedColors.last;
+
                                     corPrincipalController.text = firstSelectedColor.nome;
                                     codigoCorPrincipalController.text = firstSelectedColor.cor;
                                     corCombinanteController.text = secondSelectedColor.nome;
@@ -517,11 +553,9 @@ class _AdminPageState extends State<AdminPage> {
                     onPressed: () async {
                       if (selectedColors.length == 2) {
                         String corPrincipal = corPrincipalController.text;
-                        String codigoCorPrincipal =
-                            codigoCorPrincipalController.text;
+                        String codigoCorPrincipal = codigoCorPrincipalController.text;
                         String corCombinante = corCombinanteController.text;
-                        String codigoCorCombinante =
-                            codigoCorCombinanteController.text;
+                        String codigoCorCombinante = codigoCorCombinanteController.text;
 
                         if (corPrincipal.isNotEmpty &&
                             codigoCorPrincipal.isNotEmpty &&
@@ -592,8 +626,6 @@ class _AdminPageState extends State<AdminPage> {
     },
   );
 }
-
-
 
   Widget _buildTextField({
     required TextEditingController controller,

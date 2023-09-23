@@ -7,6 +7,7 @@ import 'produto.dart';
 import 'cor.dart';
 import 'package:logger/logger.dart';
 
+
 //================================================< DataBase >===================================================//
 
 class DatabaseProvider {
@@ -26,7 +27,9 @@ class DatabaseProvider {
     return _database;
   }
 
+
 //================================================< Inicialziar >===================================================//
+
 
   Future<Database> _initDatabase() async {
     final databasePath = await getDatabasesPath();
@@ -52,7 +55,9 @@ class DatabaseProvider {
     _database = await _initDatabase();
   }
 
+
 //================================================< Tabela Produtos >===================================================//
+
 
   Future<void> _createDatabase(Database db, int version) async {
     await db.execute('''
@@ -67,7 +72,9 @@ class DatabaseProvider {
     )
   ''');
 
+
 //================================================< Tabela Cores >===================================================//
+
 
     await db.execute('''
     CREATE TABLE cores (
@@ -94,7 +101,9 @@ class DatabaseProvider {
       await db.insert('cores', corData);
     }
 
+
 //===========================================< Tabela Cores Combinantes >=============================================//
+
 
     await db.execute('''
       CREATE TABLE cores_combinantes (
@@ -139,7 +148,9 @@ class DatabaseProvider {
     }
   }
 
+
 //==============================================< GetCores e Combinantes >===============================================//
+
 
   Future<List<Cor>> getCores() async {
     final db = await database;
@@ -166,6 +177,7 @@ class DatabaseProvider {
       return maps[i]['codigoCorCombinante'];
     });
   }
+
 
 //==============================================< GetProdutos P Cor >===============================================//
 
@@ -196,6 +208,7 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
 
 //================================================< GetProdutos >===================================================//
 
+
   Future<List<Produto>> getProdutos() async {
     final db = await database;
 
@@ -215,7 +228,9 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
     });
   }
 
+
 //==========================================< Insert e Delete Produto >=============================================//
+
 
   Future<void> insertProduto(Produto produto) async {
     final db = await database;
@@ -226,6 +241,35 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
     final db = await database;
     await db.delete('produtos');
   }
+
+
+//================================================< Delete Cores >===================================================//
+
+
+  Future<void> deleteAllCores() async {
+    final db = await database;
+    await db.delete('cores');
+  }
+
+  Future<void> deleteCor(int corId) async {
+    final db = await database;
+    await db.delete('cores', where: 'id = ?', whereArgs: [corId]);
+  }
+
+
+//==============================================< Delete Combinacoes >===============================================//
+
+
+Future<void> deleteAllCoresCombinantes() async {
+    final db = await database;
+    await db.delete('cores_combinantes');
+  }
+
+  Future<void> deleteCorCombinante(int combinacaoId) async {
+    final db = await database;
+    await db.delete('cores_combinantes', where: 'id = ?', whereArgs: [combinacaoId]);
+  }
 }
 
-//====================================================< Fim >=======================================================//
+
+//======================================================< Fim >=======================================================//
