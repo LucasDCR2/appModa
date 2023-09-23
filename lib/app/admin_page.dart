@@ -73,7 +73,7 @@ class _AdminPageState extends State<AdminPage> {
               onPressed: () {
                 _mostrarBottomSheetAdicionarCor(context);
               },
-              icon: const Icon(Icons.add),
+              icon: const Icon(Icons.colorize_rounded),
               label: const Text('Adicionar Cores'),
               style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -158,13 +158,13 @@ class _AdminPageState extends State<AdminPage> {
                         ),
                         const SizedBox(height: 20),
                         const Center(child: Text('Selecione uma Cor: ')),
+                        
                         Padding(
                           padding: const EdgeInsets.all(36.0),
                           child: SizedBox(
                             height: 300,
                             child: GridView.builder(
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 6,
                                 crossAxisSpacing: 8.0,
                                 mainAxisSpacing: 8.0,
@@ -405,57 +405,117 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
-  void _mostrarBottomSheetCombinarCores(BuildContext context) {
+ void _mostrarBottomSheetCombinarCores(BuildContext context) {
+  final TextEditingController corPrincipalController = TextEditingController();
+  final TextEditingController codigoCorPrincipalController = TextEditingController();
+  final TextEditingController corCombinanteController = TextEditingController();
+  final TextEditingController codigoCorCombinanteController = TextEditingController();
 
-    final TextEditingController corPrincipalController = TextEditingController();
-    final TextEditingController codigoCorPrincipalController = TextEditingController();
-    final TextEditingController corCombinanteController = TextEditingController();
-    final TextEditingController codigoCorCombinanteController = TextEditingController();
+  Set<Cor> selectedColors = {};
 
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return FractionallySizedBox(
-              heightFactor: 0.9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: ListView(
-                      padding: const EdgeInsets.all(16.0),
-                      children: [
-                        const SizedBox(height: 20),
-                        const Center(
-                          child: Text('Combinar Cores:'),
-                        ),
-                        const SizedBox(height: 20),
-                        _buildTextField(
-                          controller: corPrincipalController,
-                          labelText: 'Cor Principal',
-                        ),
-                        _buildTextField(
-                          controller: codigoCorPrincipalController,
-                          labelText: 'Código da Cor Principal',
-                        ),
-                        _buildTextField(
-                          controller: corCombinanteController,
-                          labelText: 'Cor Combinante',
-                        ),
-                        _buildTextField(
-                          controller: codigoCorCombinanteController,
-                          labelText: 'Código da Cor Combinante',
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return FractionallySizedBox(
+            heightFactor: 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ListView(
                     padding: const EdgeInsets.all(16.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
+                    children: [
+                      const SizedBox(height: 20),
+                      const Center(
+                        child: Text('Combinar Cores:'),
+                      ),
+                      const SizedBox(height: 20),
+                      _buildTextField(
+                        controller: corPrincipalController,
+                        labelText: 'Cor Principal',
+                      ),
+                      _buildTextField(
+                        controller: codigoCorPrincipalController,
+                        labelText: 'Código da Cor Principal',
+                      ),
+                      _buildTextField(
+                        controller: corCombinanteController,
+                        labelText: 'Cor Combinante',
+                      ),
+                      _buildTextField(
+                        controller: codigoCorCombinanteController,
+                        labelText: 'Código da Cor Combinante',
+                      ),
+                      const SizedBox(height: 20),
+                      const Center(child: Text('Selecione até duas cores:', style: TextStyle(fontSize: 16),)),
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Wrap(
+                          spacing: 8.0,
+                          runSpacing: 8.0,
+                          children: listaDeCoresDisponiveis.map((cor) {
+                            final isSelected = selectedColors.contains(cor);
+                            final scaleFactor = isSelected ? 1.2 : 1.0;
+
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (isSelected) {
+                                    selectedColors.remove(cor);
+                                  } else {
+                                    if (selectedColors.length < 2) {
+                                      selectedColors.add(cor);
+                                    }
+                                  }
+
+                                  // Fill the controllers based on selection
+                                  if (selectedColors.length == 1) {
+                                    final selectedColor = selectedColors.first;
+                                    corPrincipalController.text = selectedColor.nome;
+                                    codigoCorPrincipalController.text = selectedColor.cor;
+                                  } else if (selectedColors.length == 2) {
+                                    final firstSelectedColor = selectedColors.first;
+                                    final secondSelectedColor = selectedColors.last;
+                                    corPrincipalController.text = firstSelectedColor.nome;
+                                    codigoCorPrincipalController.text = firstSelectedColor.cor;
+                                    corCombinanteController.text = secondSelectedColor.nome;
+                                    codigoCorCombinanteController.text = secondSelectedColor.cor;
+                                  }
+                                });
+                              },
+                              child: Transform.scale(
+                                scale: scaleFactor,
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Color(
+                                      int.parse('0xFF${cor.cor.substring(1)}')),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? Colors.black
+                                          : Colors.black,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      if (selectedColors.length == 2) {
                         String corPrincipal = corPrincipalController.text;
                         String codigoCorPrincipal =
                             codigoCorPrincipalController.text;
@@ -495,23 +555,45 @@ class _AdminPageState extends State<AdminPage> {
                             },
                           );
                         }
-                      },
-                      icon: const Icon(Icons.add),
-                      label: const Text('Combinar Cores'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(10.0),
-                        minimumSize: const Size(double.infinity, 0),
-                      ),
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text('Atenção!'),
+                              content: const Text(
+                                  'Selecione exatamente duas cores para combinar.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.add),
+                    label: const Text('Combinar Cores'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(10.0),
+                      minimumSize: const Size(double.infinity, 0),
                     ),
                   ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+
 
   Widget _buildTextField({
     required TextEditingController controller,
