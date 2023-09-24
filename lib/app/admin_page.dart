@@ -8,6 +8,7 @@ import 'gerenciar_cores_page.dart';
 import '../database/produto.dart';
 import '../database/cor.dart';
 import 'dart:typed_data';
+import 'package:tonalize/app/widgets/selec_produto.dart';
 
 
 class AdminPage extends StatefulWidget {
@@ -53,18 +54,33 @@ class _AdminPageState extends State<AdminPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 40),
               const Text(
                 'Conteúdo da Administração',
                 style: TextStyle(fontSize: 18),
               ),
-              const SizedBox(height: 70),
+              const SizedBox(height: 40),
               ElevatedButton.icon(
                 onPressed: () {
+                  _carregarCoresDisponiveis();
                   _mostrarBottomSheetAdicionarProduto(context);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Adicionar Produto'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                ),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                onPressed: () {
+                  _mostrarTelaSelecionarProduto(context);
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text('Editar Produto'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
@@ -89,6 +105,7 @@ class _AdminPageState extends State<AdminPage> {
               const SizedBox(height: 40),
               ElevatedButton.icon(
                 onPressed: () {
+                  _carregarCoresDisponiveis();
                   _mostrarBottomSheetCombinarCores(context);
                 },
                 icon: const Icon(Icons.color_lens),
@@ -142,6 +159,41 @@ class _AdminPageState extends State<AdminPage> {
     );
   }
 
+void _mostrarTelaSelecionarProduto(BuildContext context) async {
+  final produtosDisponiveis = await DatabaseProvider.instance.getProdutos();
+
+  if (produtosDisponiveis.isEmpty) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Nenhum Produto Disponível'),
+          content: const Text('Não há produtos disponíveis para edição.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+    return;
+  }
+
+  final produtoSelecionado = await Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (context) => TelaSelecaoProduto(produtos: produtosDisponiveis),
+    ),
+  );
+
+  if (produtoSelecionado != null) {
+    _mostrarBottomSheetEditarProduto(context, produtoSelecionado);
+  }
+}
+
 void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
 
     nomeController.clear();
@@ -149,6 +201,7 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
     precoController.clear();
     nomeCorSelecionadaController.clear();
     _corSelecionada = null;
+    
 
     showModalBottomSheet(
       context: context,
@@ -165,7 +218,7 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                     child: ListView(
                       padding: const EdgeInsets.all(16.0),
                       children: [
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         const Center(
                           child: Text('Preencha as informações do produto:', style: TextStyle(fontSize: 16)),
                         ),
@@ -186,52 +239,53 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                           controller: nomeCorSelecionadaController,
                           labelText: 'Nome da Cor Selecionada',
                         ),
-                        const SizedBox(height: 20),
-                        const Center(child: Text('Selecione uma Cor: ')),
+                        const SizedBox(height: 10),
+                        const Center(child: Text('Selecione uma Cor: ', style: TextStyle(fontSize: 16),)),
                         
-                        Padding(
-                          padding: const EdgeInsets.all(36.0),
-                          child: SizedBox(
-                            height: 300,
-                            child: GridView.builder(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 6,
-                                crossAxisSpacing: 8.0,
-                                mainAxisSpacing: 8.0,
-                              ),
-                              itemCount: listaDeCoresDisponiveis.length,
-                              itemBuilder: (context, index) {
-                                final cor = listaDeCoresDisponiveis[index];
-                                final isSelected = _corSelecionada == cor;
-                                final scaleFactor = isSelected ? 1.2 : 1.0;
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _corSelecionada = cor;
-                                      nomeCorSelecionadaController.text = _corSelecionada != null ? _corSelecionada!.nome : '';
-                                    });
-                                  },
-                                  child: Transform.scale(
-                                    scale: scaleFactor,
-                                    child: Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
-                                        border: Border.all(
-                                          color: isSelected
-                                              ? Colors.black
-                                              : Colors.black,
-                                          width: 1,
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: SizedBox(
+                              height: 300,
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 6,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 8.0,
+                                ),
+                                itemCount: listaDeCoresDisponiveis.length,
+                                itemBuilder: (context, index) {
+                                  final cor = listaDeCoresDisponiveis[index];
+                                  final isSelected = _corSelecionada == cor;
+                                  final scaleFactor = isSelected ? 1.2 : 1.0;
+                        
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _corSelecionada = cor;
+                                        nomeCorSelecionadaController.text = _corSelecionada != null ? _corSelecionada!.nome : '';
+                                      });
+                                    },
+                                    child: Transform.scale(
+                                      scale: scaleFactor,
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
+                                          border: Border.all(
+                                            color: isSelected
+                                                ? Colors.black
+                                                : Colors.black,
+                                            width: 1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -285,6 +339,100 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
     );
   }
 
+void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
+  final nomeController = TextEditingController(text: produto.nome);
+  final tamanhoController = TextEditingController(text: produto.tamanho);
+  final precoController = TextEditingController(text: produto.preco.toString());
+
+  Uint8List? novaImagem;
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return FractionallySizedBox(
+            heightFactor: 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.all(16.0),
+                    children: [
+                      _buildTextField(
+                        controller: nomeController,
+                        labelText: 'Nome',
+                      ),
+                      _buildTextField(
+                        controller: tamanhoController,
+                        labelText: 'Tamanho',
+                      ),
+                      _buildTextField(
+                        controller: precoController,
+                        labelText: 'Preço',
+                      ),
+
+
+                      ElevatedButton(
+                        onPressed: () async {
+                          final XFile? imageFile =
+                              await ImagePicker().pickImage(source: ImageSource.gallery);
+                          
+                          if (imageFile != null) {
+                            novaImagem = await imageFile.readAsBytes();
+                          }
+                        },
+                        child: const Text('Trocar Imagem'),
+                      ),
+
+                      ElevatedButton(
+                        onPressed: () async {
+
+                          final nomeEditado = nomeController.text;
+                          final tamanhoEditado = tamanhoController.text;
+                          double precoEditado;
+
+                          try {
+                            precoEditado = double.parse(precoController.text);
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Por favor, insira um valor de preço válido.'),
+                              ),
+                            );
+                            return;
+                          }
+
+                          final produtoAtualizado = Produto(
+                            id: produto.id,
+                            imagem: novaImagem ?? produto.imagem, 
+                            nome: nomeEditado.isNotEmpty ? nomeEditado : produto.nome, 
+                            cor: produto.cor,
+                            corNome: produto.corNome,
+                            tamanho: tamanhoEditado.isNotEmpty ? tamanhoEditado : produto.tamanho, 
+                            preco: precoEditado,
+                          );
+
+                          await DatabaseProvider.instance.atualizarProduto(produtoAtualizado);
+
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Salvar Alterações'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 void _mostrarBottomSheetAdicionarCor(BuildContext context) {
     TextEditingController nomeController = TextEditingController();
     TextEditingController codigoController = TextEditingController();
@@ -324,7 +472,7 @@ void _mostrarBottomSheetAdicionarCor(BuildContext context) {
                             const SizedBox(height: 50),
                             const Text(
                               'Selecione uma Cor: ',
-                              style: TextStyle(fontSize: 24),
+                              style: TextStyle(fontSize: 20),
                             ),
                             const SizedBox(height: 20),
                             GestureDetector(
@@ -369,9 +517,10 @@ void _mostrarBottomSheetAdicionarCor(BuildContext context) {
                                 );
                               },
                               child: Container(
-                                width: 100,
-                                height: 100,
+                                width: 170,
+                                height: 170,
                                 decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(40),
                                   color: selectedColor,
                                   border: Border.all(
                                     color: Colors.black,
@@ -490,21 +639,21 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
                             final scaleFactor = isSelected ? 1.2 : 1.0;
 
                             return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  if (isSelected) {
-                                    selectedColors.remove(cor);
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      selectedColors.remove(cor);
                                       corPrincipalController.clear();
-  codigoCorPrincipalController.clear();
-  corCombinanteController.clear();
-  codigoCorCombinanteController.clear();
-                                  } else {
-                                    if (selectedColors.length < 2) {
-                                      selectedColors.add(cor);
+                                      codigoCorPrincipalController.clear();
+                                      corCombinanteController.clear();
+                                      codigoCorCombinanteController.clear();
+                                    } else {
+                                      if (selectedColors.length < 2) {
+                                        selectedColors.add(cor);
+                                      }
                                     }
-                                  }
 
-                                  if (selectedColors.length == 1) {
+                                    if (selectedColors.length == 1) {
                                     final selectedColor = selectedColors.first;
 
                                     corPrincipalController.text = selectedColor.nome;
@@ -528,8 +677,7 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
                                   width: 50,
                                   height: 50,
                                   decoration: BoxDecoration(
-                                    color: Color(
-                                      int.parse('0xFF${cor.cor.substring(1)}')),
+                                    color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
                                     border: Border.all(
                                       color: isSelected
                                           ? Colors.black
@@ -626,7 +774,7 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
     },
   );
 }
-
+  
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
@@ -642,7 +790,7 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
       ),
     );
   }
-
+  
   Future<void> _adicionarProduto() async {
     final nome = nomeController.text;
     final tamanho = tamanhoController.text;
@@ -710,8 +858,7 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
       'corCombinante': corCombinante,
       'codigoCorCombinante': codigoCorCombinante,
     });
-    debugPrint(
-        'Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
+    debugPrint('Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
   }
 
   Future<void> _excluirProdutosDialog(BuildContext context) async {

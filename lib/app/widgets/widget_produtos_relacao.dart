@@ -28,9 +28,7 @@ class _ProdutosComMesmaCorWidgetState extends State<ProdutosComMesmaCorWidget> {
   }
 
   Future<List<Produto>> _carregarProdutosFiltrados() async {
-    final coresCombinantes = await DatabaseProvider.instance
-        .getCoresCombinantes(
-            widget.produtoAtual.corNome, widget.produtoAtual.cor);
+    final coresCombinantes = await DatabaseProvider.instance.getCoresCombinantes(widget.produtoAtual.corNome, widget.produtoAtual.cor);
 
     final List<Produto> produtosFiltrados = [];
 

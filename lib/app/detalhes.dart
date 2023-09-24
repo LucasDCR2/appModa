@@ -23,7 +23,7 @@ class DetalhesPage extends StatelessWidget {
               // Navegar de volta para a página inicial
               Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => const MyApp()),
-                (route) => false, // Essa função remove todas as outras páginas
+                (route) => false, 
               );
             },
           ),
@@ -45,9 +45,7 @@ class DetalhesPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-
                 DetalhesProdutoWidget(produto: produto),
-
 
                 const SizedBox(height: 20),
                 const Divider(

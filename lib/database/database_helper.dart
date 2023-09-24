@@ -164,8 +164,7 @@ class DatabaseProvider {
     });
   }
 
-  Future<List<String>> getCoresCombinantes(
-      String nomeCor, String codigoCorPrincipal) async {
+  Future<List<String>> getCoresCombinantes(String nomeCor, String codigoCorPrincipal) async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(
@@ -177,6 +176,12 @@ class DatabaseProvider {
       return maps[i]['codigoCorCombinante'];
     });
   }
+
+  Future<List<Map<String, dynamic>>> carregarCombinacoesDoBanco() async {
+    final db = await database;
+    final List<Map<String, dynamic>> combinacoes = await db.query('cores_combinantes');
+    return combinacoes;
+}
 
 
 //==============================================< GetProdutos P Cor >===============================================//
@@ -269,6 +274,16 @@ Future<void> deleteAllCoresCombinantes() async {
     final db = await database;
     await db.delete('cores_combinantes', where: 'id = ?', whereArgs: [combinacaoId]);
   }
+
+
+//==============================================< Editar Produto >===============================================//
+
+
+  Future<void> atualizarProduto(Produto produto) async {
+  final db = await DatabaseProvider.instance.database;
+  await db.update('produtos', produto.toMap(), where: 'id = ?', whereArgs: [produto.id]);
+  // Você também pode querer mostrar uma mensagem de confirmação aqui.
+}
 }
 
 
