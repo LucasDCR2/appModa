@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'catalogo_page.dart';
 import 'admin_page.dart';
 
+
+
 class HomePage extends StatelessWidget {
   final VoidCallback trocarTema; 
   const HomePage({required this.trocarTema, Key? key}) : super(key: key);

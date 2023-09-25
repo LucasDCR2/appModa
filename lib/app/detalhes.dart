@@ -1,10 +1,11 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, unnecessary_string_interpolations
+// ignore_for_file: unnecessary_string_interpolations, prefer_const_constructors_in_immutables, use_key_in_widget_constructors, unused_element, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:tonalize/main.dart';
 import 'package:tonalize/database/produto.dart';
 import 'widgets/widget_produtos_relacao.dart';
 import 'widgets/widget_detalhes_body.dart';
+
 
 class DetalhesPage extends StatelessWidget {
   final Produto produto;
@@ -44,10 +45,14 @@ class DetalhesPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-
                 DetalhesProdutoWidget(produto: produto),
-
                 const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                  },
+                  icon: Icon(Icons.qr_code_scanner_outlined),
+                  label: Text('QR Code'),
+                ),
                 const Divider(
                   color: Colors.grey,
                   thickness: 2,
@@ -60,8 +65,6 @@ class DetalhesPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-
-
                 ProdutosComMesmaCorWidget(produtoAtual: produto),
               ],
             ),

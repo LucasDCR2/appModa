@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
+// ignore_for_file: use_key_in_widget_constructors, use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
 import '../database/produto.dart';
@@ -15,7 +15,15 @@ class CatalogoPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Catálogo'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.qr_code_scanner), // Ícone do scanner de QR Code
+            onPressed: () {
+            },
+          ),
+        ],
       ),
+
       body: FutureBuilder<List<Produto>>(
         future: DatabaseProvider.instance.getProdutos(),
         builder: (context, snapshot) {

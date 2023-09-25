@@ -10,7 +10,6 @@ import '../database/cor.dart';
 import 'dart:typed_data';
 import 'package:tonalize/app/widgets/selec_produto.dart';
 
-
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key});
 
@@ -80,7 +79,7 @@ class _AdminPageState extends State<AdminPage> {
                   _mostrarTelaSelecionarProduto(context);
                 },
                 icon: const Icon(Icons.edit),
-                label: const Text('Editar Produto'),
+                label: const Text('Ver Produto e QrCode'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
@@ -344,49 +343,65 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
   final tamanhoController = TextEditingController(text: produto.tamanho);
   final precoController = TextEditingController(text: produto.preco.toString());
 
-  Uint8List? novaImagem;
+    Uint8List? novaImagem;
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return FractionallySizedBox(
-            heightFactor: 0.9,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.all(16.0),
-                    children: [
-                      _buildTextField(
-                        controller: nomeController,
-                        labelText: 'Nome',
-                      ),
-                      _buildTextField(
-                        controller: tamanhoController,
-                        labelText: 'Tamanho',
-                      ),
-                      _buildTextField(
-                        controller: precoController,
-                        labelText: 'Preço',
-                      ),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.all(16.0),
+                      children: [
+                        _buildTextField(
+                          controller: nomeController,
+                          labelText: 'Nome',
+                        ),
+                        _buildTextField(
+                          controller: tamanhoController,
+                          labelText: 'Tamanho',
+                        ),
+                        _buildTextField(
+                          controller: precoController,
+                          labelText: 'Preço',
+                        ),
+                        const SizedBox(height: 50),
+                        ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.qr_code_scanner_outlined),
+                          label: const Text('QR Code'),
+                        ),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final XFile? imageFile = await ImagePicker()
+                                .pickImage(source: ImageSource.gallery);
 
-
-                      ElevatedButton(
-                        onPressed: () async {
-                          final XFile? imageFile =
-                              await ImagePicker().pickImage(source: ImageSource.gallery);
-                          
-                          if (imageFile != null) {
-                            novaImagem = await imageFile.readAsBytes();
-                          }
-                        },
-                        child: const Text('Trocar Imagem'),
-                      ),
-
+                            if (imageFile != null) {
+                              novaImagem = await imageFile.readAsBytes();
+                            }
+                          },
+                          child: const Text('Trocar Imagem'),
+                        ),
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await _excluirProduto(produto, context);
+                            Navigator.of(context).pop();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red, 
+                          ),
+                          child: const Text('Excluir Produto'),
+                        ),
+                      const SizedBox(height: 30),
                       ElevatedButton(
                         onPressed: () async {
 
@@ -415,7 +430,7 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
                             preco: precoEditado,
                           );
 
-                          await DatabaseProvider.instance.atualizarProduto(produtoAtualizado);
+                          await DatabaseProvider.instance.atualizarProduto(produtoAtualizado, context);
 
                           Navigator.of(context).pop();
                         },
@@ -775,7 +790,7 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
   );
 }
   
-  Widget _buildTextField({
+Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
   }) {
@@ -791,65 +806,75 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
     );
   }
   
-  Future<void> _adicionarProduto() async {
-    final nome = nomeController.text;
-    final tamanho = tamanhoController.text;
+Future<void> _adicionarProduto() async {
+  final nome = nomeController.text;
+  final tamanho = tamanhoController.text;
+  double preco;
 
-    double preco;
-
-    try {
-      preco = double.parse(precoController.text);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Por favor, insira um valor de preço válido.'),
-        ),
-      );
-      return;
-    }
-
-    final XFile? imageFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (imageFile != null) {
-      final bytes = await imageFile.readAsBytes();
-
-      if (_corSelecionada != null) {
-        final produto = Produto(
-          id: null,
-          imagem: bytes,
-          nome: nome,
-          cor: _corSelecionada!.cor,
-          corNome: _corSelecionada!.nome,
-          tamanho: tamanho,
-          preco: preco,
-        );
-
-        final db = await DatabaseProvider.instance.database;
-        await db.insert('produtos', produto.toMap());
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Produto adicionado ao banco de dados.'),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Por favor, selecione uma cor.'),
-          ),
-        );
-      }
-    }
+  try {
+    preco = double.parse(precoController.text);
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Por favor, insira um valor de preço válido.'),
+      ),
+    );
+    return;
   }
 
-  Future<void> _adicionarCor(String nome, String cor) async {
+  final XFile? imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+  if (imageFile != null) {
+    final bytes = await imageFile.readAsBytes();
+
+    if (_corSelecionada != null) {
+      // Gere o código QR para o produto
+      final produto = Produto(
+        id: null,
+        imagem: bytes,
+        nome: nome,
+        cor: _corSelecionada!.cor,
+        corNome: _corSelecionada!.nome,
+        tamanho: tamanho,
+        preco: preco,
+      );
+
+      final db = await DatabaseProvider.instance.database;
+
+      final id = await db.insert('produtos', produto.toMap());
+
+      // Atualize o produto com o ID atribuído pelo banco de dados
+      produto.id = id;
+      produto.qrCode = produto.gerarQRCode(produto.id.toString());
+
+      debugPrint('Código QR gerado: ${produto.id}');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Produto adicionado ao banco de dados.'),
+        ),
+      );
+  
+      // Agora, o código QR está armazenado na propriedade qrCode do produto
+      debugPrint('Código QR gerado: ${produto.qrCode}');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, selecione uma cor.'),
+        ),
+      );
+    }
+  }
+}
+
+
+Future<void> _adicionarCor(String nome, String cor) async {
     final db = await DatabaseProvider.instance.database;
     await db.insert('cores', {'nome': nome, 'cor': cor});
     debugPrint('Cor adicionada - Nome: $nome, Cor: $cor');
   }
 
-  Future<void> _combinarCores(String corPrincipal, String codigoCorPrincipal,
+Future<void> _combinarCores(String corPrincipal, String codigoCorPrincipal,
       String corCombinante, String codigoCorCombinante) async {
     final db = await DatabaseProvider.instance.database;
     await db.insert('cores_combinantes', {
@@ -861,7 +886,20 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
     debugPrint('Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
   }
 
-  Future<void> _excluirProdutosDialog(BuildContext context) async {
+Future<void> _excluirProduto(Produto produto, BuildContext context) async {
+
+  await DatabaseProvider.instance.excluirProduto(produto);
+
+  // Exiba um snackbar após a exclusão.
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Produto excluído com sucesso!'),
+      duration: Duration(seconds: 2), // Defina a duração do snackbar
+    ),
+  );
+}
+
+Future<void> _excluirProdutosDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {

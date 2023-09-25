@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -68,7 +68,8 @@ class DatabaseProvider {
       cor TEXT,
       corNome TEXT,
       tamanho TEXT,
-      preco REAL
+      preco REAL,
+      qrCode TEXT
     )
   ''');
 
@@ -206,6 +207,7 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
       corNome: maps[i]['corNome'],
       tamanho: maps[i]['tamanho'],
       preco: maps[i]['preco'],
+      qrCode: maps[i]['qrCode'],
     );
   });
 }
@@ -214,25 +216,27 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
 //================================================< GetProdutos >===================================================//
 
 
-  Future<List<Produto>> getProdutos() async {
-    final db = await database;
+ Future<List<Produto>> getProdutos() async {
+  final db = await database;
 
-    // Execute a consulta SQL que inclui a nova coluna 'corNome'
-    final List<Map<String, dynamic>> maps = await db.query('produtos');
+  // Execute a consulta SQL que inclui a nova coluna 'corNome'
+  final List<Map<String, dynamic>> maps = await db.query('produtos');
 
-    return List.generate(maps.length, (i) {
-      return Produto(
-        id: maps[i]['id'],
-        imagem: maps[i]['imagem'],
-        nome: maps[i]['nome'],
-        cor: maps[i]['cor'],
-        corNome: maps[i]['corNome'],
-        tamanho: maps[i]['tamanho'],
-        preco: maps[i]['preco'],
-      );
-    });
-  }
+  return List.generate(maps.length, (i) {
+    final produto = Produto(
+      id: maps[i]['id'],
+      imagem: maps[i]['imagem'],
+      nome: maps[i]['nome'],
+      cor: maps[i]['cor'],
+      corNome: maps[i]['corNome'],
+      tamanho: maps[i]['tamanho'],
+      preco: maps[i]['preco'],
+      qrCode: maps[i]['qrCode'],
+    );
 
+    return produto;
+  });
+}
 
 //==========================================< Insert e Delete Produto >=============================================//
 
@@ -246,6 +250,11 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
     final db = await database;
     await db.delete('produtos');
   }
+
+  Future<void> excluirProduto(Produto produto) async {
+  final db = await database;
+  await db.delete('produtos', where: 'id = ?', whereArgs: [produto.id]);
+}
 
 
 //================================================< Delete Cores >===================================================//
@@ -279,11 +288,19 @@ Future<void> deleteAllCoresCombinantes() async {
 //==============================================< Editar Produto >===============================================//
 
 
-  Future<void> atualizarProduto(Produto produto) async {
+Future<void> atualizarProduto(Produto produto, BuildContext context) async {
   final db = await DatabaseProvider.instance.database;
   await db.update('produtos', produto.toMap(), where: 'id = ?', whereArgs: [produto.id]);
-  // Você também pode querer mostrar uma mensagem de confirmação aqui.
+
+  // Exiba um snackbar de confirmação.
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text('Produto atualizado com sucesso!'),
+      duration: Duration(seconds: 2), 
+    ),
+  );
 }
+
 }
 
 
