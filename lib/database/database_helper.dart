@@ -234,9 +234,35 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
       qrCode: maps[i]['qrCode'],
     );
 
-    return produto;
-  });
-}
+      return produto;
+    });
+  }
+
+  Future<Produto?> getProdutoPorId(int id) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'produtos',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return Produto(
+        id: maps[0]['id'],
+        imagem: maps[0]['imagem'],
+        nome: maps[0]['nome'],
+        cor: maps[0]['cor'],
+        corNome: maps[0]['corNome'],
+        tamanho: maps[0]['tamanho'],
+        preco: maps[0]['preco'],
+        qrCode: maps[0]['qrCode'],
+      );
+    } else {
+      return null; // Produto não encontrado
+    }
+  }
+  
 
 //==========================================< Insert e Delete Produto >=============================================//
 
@@ -255,6 +281,7 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
   final db = await database;
   await db.delete('produtos', where: 'id = ?', whereArgs: [produto.id]);
 }
+
 
 
 //================================================< Delete Cores >===================================================//

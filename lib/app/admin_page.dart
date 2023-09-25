@@ -372,13 +372,7 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
                           controller: precoController,
                           labelText: 'Preço',
                         ),
-                        const SizedBox(height: 50),
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.qr_code_scanner_outlined),
-                          label: const Text('QR Code'),
-                        ),
-                        const SizedBox(height: 10),
+                        
                         ElevatedButton(
                           onPressed: () async {
                             final XFile? imageFile = await ImagePicker()
@@ -390,7 +384,6 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
                           },
                           child: const Text('Trocar Imagem'),
                         ),
-                        const SizedBox(height: 10),
                         ElevatedButton(
                           onPressed: () async {
                             await _excluirProduto(produto, context);
@@ -866,7 +859,6 @@ Future<void> _adicionarProduto() async {
     }
   }
 }
-
 
 Future<void> _adicionarCor(String nome, String cor) async {
     final db = await DatabaseProvider.instance.database;

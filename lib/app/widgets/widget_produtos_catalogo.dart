@@ -17,7 +17,7 @@ class ProdutoItem extends StatelessWidget {
           Image.memory(
             produto.imagem!,
             width: double.infinity,
-            height: 200,
+            height: 184,
             fit: BoxFit.cover,
           ),
           Padding(
@@ -33,6 +33,7 @@ class ProdutoItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12.0),
+                Text('QrCódigo: ${produto.id}'),
                 Row(
                   children: [
                     Text(

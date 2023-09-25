@@ -6,7 +6,6 @@ import 'package:tonalize/database/produto.dart';
 import 'widgets/widget_produtos_relacao.dart';
 import 'widgets/widget_detalhes_body.dart';
 
-
 class DetalhesPage extends StatelessWidget {
   final Produto produto;
 
@@ -47,12 +46,6 @@ class DetalhesPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 DetalhesProdutoWidget(produto: produto),
                 const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: () {
-                  },
-                  icon: Icon(Icons.qr_code_scanner_outlined),
-                  label: Text('QR Code'),
-                ),
                 const Divider(
                   color: Colors.grey,
                   thickness: 2,

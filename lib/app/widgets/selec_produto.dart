@@ -38,7 +38,7 @@ class TelaSelecaoProduto extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('ID: ${produto.id}'),
+                          Text('Código QrCode: ${produto.id}'),
                           Text(produto.nome),
                           Text('Cor: ${produto.corNome}'),
                           Text(
@@ -106,32 +106,34 @@ Future<void> _exibirQRCodeDialog(BuildContext context, int qrCodeData) async {
               children: [
                  ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red, 
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    child: const Text('Fechar'),
                   ),
-                  child: const Text('Fechar'),
-                ),
-                const SizedBox(width: 16.0),
-                ElevatedButton(
-                  onPressed: () {
-                    // Implemente aqui a lógica para salvar o QR Code
-                    // Pode usar plugins como path_provider para salvar a imagem no dispositivo
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green, 
+                  const SizedBox(width: 16.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Funcionalidade em Desenvolvimento'),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: const Text('Salvar'),
                   ),
-                  child: const Text('Salvar'),
-                ),
-              ],
-            ),
+                ],
+              ),
           ],
         ),
       );
     },
   );
 }
-
-
 }
