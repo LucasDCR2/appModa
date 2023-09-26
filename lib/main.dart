@@ -6,7 +6,6 @@ import 'app/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   final databaseProvider = DatabaseProvider.instance;
   await databaseProvider.initializeDatabase(); 
 
