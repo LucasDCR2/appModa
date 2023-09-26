@@ -45,7 +45,8 @@ class _AdminPageState extends State<AdminPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Administração'),
+        title: Image.asset('images/Logo_Tonalize.png',
+            width: 140, height: 60),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

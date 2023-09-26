@@ -15,7 +15,9 @@ class DetalhesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalhes do Produto'),
+        title: Image.asset('images/Logo_Tonalize.png',
+            width: 140, height: 60),
+            centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.home),

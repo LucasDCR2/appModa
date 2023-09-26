@@ -23,7 +23,8 @@ class _CatalogoPageState extends State<CatalogoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Catálogo'),
+        title: Image.asset('images/Logo_Tonalize.png',
+            width: 140, height: 60),
         centerTitle: true,
         actions: [
           IconButton(

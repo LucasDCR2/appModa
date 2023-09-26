@@ -116,8 +116,8 @@ class DatabaseProvider {
       )
   ''');
 
-    final coresCombinantes = [
-      {
+    final coresCombinantes = [];
+      /*{
         'corPrincipal': 'Azul',
         'codigoCorPrincipal': '#0000FF',
         'corCombinante': 'Azul',
@@ -142,7 +142,7 @@ class DatabaseProvider {
         'codigoCorCombinante': '#800080'
       },
       // Adicione outras relações de cores combinantes conforme necessário
-    ];
+    ];*/
 
     for (final relacao in coresCombinantes) {
       await db.insert('cores_combinantes', relacao);

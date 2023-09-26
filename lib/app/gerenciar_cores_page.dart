@@ -350,7 +350,8 @@ void _exibirCombinacoesDialog(BuildContext context) {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: Text('Gerenciar Cores'),
+      title: Image.asset('images/Logo_Tonalize.png',
+            width: 140, height: 60),
       centerTitle: true,
     ),
     body: Center(

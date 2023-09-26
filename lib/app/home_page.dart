@@ -99,7 +99,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tonalize'),
+        title: Image.asset('images/Logo_Tonalize.png',
+            width: 140, height: 60),
         centerTitle: true,
         actions: [
           IconButton(
@@ -113,7 +114,7 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            if (isToggleButtonVisible) // Mostrar o botão de alternância apenas quando visível
+            if (isToggleButtonVisible) 
               ElevatedButton(
                 onPressed: selectedUserType == UserType.client
                     ? toggleUserType
