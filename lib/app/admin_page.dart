@@ -46,7 +46,7 @@ class _AdminPageState extends State<AdminPage> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('images/Logo_Tonalize.png',
-            width: 140, height: 60),
+            width: 130, height: 100),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -54,9 +54,9 @@ class _AdminPageState extends State<AdminPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               const Text(
-                'Conteúdo da Administração',
+                'Administração',
                 style: TextStyle(fontSize: 18),
               ),
               const SizedBox(height: 40),
@@ -74,13 +74,13 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () {
                   _mostrarTelaSelecionarProduto(context);
                 },
                 icon: const Icon(Icons.edit),
-                label: const Text('Ver Produto e QrCode'),
+                label: const Text('Editar Produto/QrCode'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
@@ -88,7 +88,7 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 80),
               ElevatedButton.icon(
                 onPressed: () {
                   _mostrarBottomSheetAdicionarCor(context);
@@ -102,7 +102,7 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () {
                   _carregarCoresDisponiveis();
@@ -117,7 +117,7 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -136,7 +136,7 @@ class _AdminPageState extends State<AdminPage> {
                   padding: const EdgeInsets.all(16),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 80),
               ElevatedButton.icon(
                 onPressed: () async {
                   await _excluirProdutosDialog(context);
@@ -197,8 +197,6 @@ void _mostrarTelaSelecionarProduto(BuildContext context) async {
 void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
 
     nomeController.clear();
-    tamanhoController.clear();
-    precoController.clear();
     nomeCorSelecionadaController.clear();
     _corSelecionada = null;
     
@@ -226,14 +224,6 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                         _buildTextField(
                           controller: nomeController,
                           labelText: 'Nome',
-                        ),
-                        _buildTextField(
-                          controller: tamanhoController,
-                          labelText: 'Tamanho',
-                        ),
-                        _buildTextField(
-                          controller: precoController,
-                          labelText: 'Preço',
                         ),
                         _buildTextField(
                           controller: nomeCorSelecionadaController,
@@ -296,16 +286,14 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        if (nomeController.text.isEmpty ||
-                            tamanhoController.text.isEmpty ||
-                            precoController.text.isEmpty) {
+                        if (nomeController.text.isEmpty) {
                           // Se algum dos campos não estiver preenchido, exiba um alerta
                           showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
                                 title: const Text('Atenção!'),
-                                content: const Text('Campos incompletos'),
+                                content: const Text('Preencha o nome do produto.'),
                                 actions: [
                                   TextButton(
                                     onPressed: () {
@@ -318,7 +306,7 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                             },
                           );
                         } else {
-                          Navigator.of(context).pop(); // Fecha o BottomSheet
+                          Navigator.of(context).pop(); 
                           await _adicionarProduto();
                         }
                       },
@@ -341,22 +329,22 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
 
 void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
   final nomeController = TextEditingController(text: produto.nome);
-  final tamanhoController = TextEditingController(text: produto.tamanho);
-  final precoController = TextEditingController(text: produto.preco.toString());
 
-    Uint8List? novaImagem;
+  Uint8List? novaImagem;
+  String? novaCorSelecionada; 
+  String? novaCorNomeSelecionada; 
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return FractionallySizedBox(
-              heightFactor: 0.9,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return FractionallySizedBox(
+            heightFactor: 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
                   Expanded(
                     child: ListView(
                       padding: const EdgeInsets.all(16.0),
@@ -365,70 +353,125 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
                           controller: nomeController,
                           labelText: 'Nome',
                         ),
-                        _buildTextField(
-                          controller: tamanhoController,
-                          labelText: 'Tamanho',
-                        ),
-                        _buildTextField(
-                          controller: precoController,
-                          labelText: 'Preço',
-                        ),
-                        
-                        ElevatedButton(
-                          onPressed: () async {
-                            final XFile? imageFile = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
+                        SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: SizedBox(
+                              height: 350,
+                              child: GridView.builder(
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 6,
+                                  crossAxisSpacing: 8.0,
+                                  mainAxisSpacing: 8.0,
+                                ),
+                                itemCount: listaDeCoresDisponiveis.length + 1,
+                                itemBuilder: (context, index) {
+                                  if (index == 0) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          novaCorSelecionada = null;
+                                          novaCorNomeSelecionada = produto.corNome;
+                                          nomeCorSelecionadaController.text = novaCorNomeSelecionada ?? '';
+                                        });
+                                      },
+                                      child: IconButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            novaCorSelecionada = null;
+                                            novaCorNomeSelecionada = produto.corNome;
+                                            nomeCorSelecionadaController.text = novaCorNomeSelecionada ?? '';
+                                          });
+                                        },
+                                        icon: const Icon(
+                                            Icons.delete), // Ícone de lixeira
+                                        color: novaCorSelecionada == null
+                                            ? Colors.grey
+                                            : Colors.red,
+                                      ),
+                                    );
+                                  } else {
+                                    final cor =
+                                        listaDeCoresDisponiveis[index - 1];
+                                    final isSelected =
+                                        novaCorSelecionada == cor.cor;
+                                    final scaleFactor = isSelected ? 1.2 : 1.0;
 
-                            if (imageFile != null) {
-                              novaImagem = await imageFile.readAsBytes();
-                            }
-                          },
-                          child: const Text('Trocar Imagem'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () async {
-                            await _excluirProduto(produto, context);
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red, 
+                                    return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        novaCorSelecionada = cor.cor; 
+                                        novaCorNomeSelecionada = cor.nome;
+                                        nomeCorSelecionadaController.text = novaCorNomeSelecionada ?? '';
+                                      });
+                                    },
+                                    child: Transform.scale(
+                                      scale: scaleFactor,
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
+                                          border: Border.all(
+                                            color: isSelected ? Colors.black : Colors.black,
+                                            width: 1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                           ),
-                          child: const Text('Excluir Produto'),
                         ),
-                      const SizedBox(height: 30),
+                      ),
                       ElevatedButton(
                         onPressed: () async {
+                          final XFile? imageFile =
+                              await ImagePicker().pickImage(source: ImageSource.gallery);
 
-                          final nomeEditado = nomeController.text;
-                          final tamanhoEditado = tamanhoController.text;
-                          double precoEditado;
-
-                          try {
-                            precoEditado = double.parse(precoController.text);
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Por favor, insira um valor de preço válido.'),
-                              ),
-                            );
-                            return;
+                          if (imageFile != null) {
+                            novaImagem = await imageFile.readAsBytes();
                           }
+                        },
+                        child: const Text('Trocar Imagem'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final nomeEditado = nomeController.text;
+
+                          final corSelecionada = novaCorSelecionada ?? produto.cor;
+                          final corNomeSelecionada = novaCorNomeSelecionada ?? produto.corNome; 
 
                           final produtoAtualizado = Produto(
                             id: produto.id,
-                            imagem: novaImagem ?? produto.imagem, 
-                            nome: nomeEditado.isNotEmpty ? nomeEditado : produto.nome, 
-                            cor: produto.cor,
-                            corNome: produto.corNome,
-                            tamanho: tamanhoEditado.isNotEmpty ? tamanhoEditado : produto.tamanho, 
-                            preco: precoEditado,
+                            imagem: novaImagem ?? produto.imagem,
+                            nome: nomeEditado.isNotEmpty ? nomeEditado : produto.nome,
+                            cor: corSelecionada, 
+                            corNome: corNomeSelecionada, 
                           );
 
                           await DatabaseProvider.instance.atualizarProduto(produtoAtualizado, context);
 
                           Navigator.of(context).pop();
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
                         child: const Text('Salvar Alterações'),
+                      ),
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await _excluirProduto(produto, context);
+                          Navigator.of(context).pop();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        child: const Text('Excluir Produto'),
                       ),
                     ],
                   ),
@@ -442,10 +485,11 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
   );
 }
 
+
 void _mostrarBottomSheetAdicionarCor(BuildContext context) {
     TextEditingController nomeController = TextEditingController();
     TextEditingController codigoController = TextEditingController();
-    Color selectedColor = Colors.white;
+    Color selectedColor = Colors.pink;
 
     showModalBottomSheet(
       context: context,
@@ -464,7 +508,7 @@ void _mostrarBottomSheetAdicionarCor(BuildContext context) {
                       children: [
                         const SizedBox(height: 20),
                         const Center(
-                          child: Text('Adicionar Nova Cor:', style: TextStyle(fontSize: 16)),
+                          child: Text('Adicionar Nova Cor:', style: TextStyle(fontSize: 20)),
                         ),
                         const SizedBox(height: 20),
                         _buildTextField(
@@ -802,19 +846,6 @@ Widget _buildTextField({
   
 Future<void> _adicionarProduto() async {
   final nome = nomeController.text;
-  final tamanho = tamanhoController.text;
-  double preco;
-
-  try {
-    preco = double.parse(precoController.text);
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Por favor, insira um valor de preço válido.'),
-      ),
-    );
-    return;
-  }
 
   final XFile? imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -829,8 +860,6 @@ Future<void> _adicionarProduto() async {
         nome: nome,
         cor: _corSelecionada!.cor,
         corNome: _corSelecionada!.nome,
-        tamanho: tamanho,
-        preco: preco,
       );
 
       final db = await DatabaseProvider.instance.database;

@@ -16,7 +16,7 @@ class DetalhesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('images/Logo_Tonalize.png',
-            width: 140, height: 60),
+            width: 130, height: 100),
             centerTitle: true,
         actions: [
           IconButton(
@@ -47,7 +47,7 @@ class DetalhesPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 DetalhesProdutoWidget(produto: produto),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 const Divider(
                   color: Colors.grey,
                   thickness: 2,

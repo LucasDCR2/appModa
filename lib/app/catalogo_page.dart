@@ -5,6 +5,7 @@ import '../database/produto.dart';
 import '../database/database_helper.dart';
 import 'widgets/widget_produtos_catalogo.dart';
 import 'detalhes.dart';
+import 'package:tonalize/app/widgets/widget_combinacoes_cores.dart';
 
 class CatalogoPage extends StatefulWidget {
   const CatalogoPage({Key? key}) : super(key: key);
@@ -24,7 +25,7 @@ class _CatalogoPageState extends State<CatalogoPage> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('images/Logo_Tonalize.png',
-            width: 140, height: 60),
+            width: 130, height: 100),
         centerTitle: true,
         actions: [
           IconButton(
@@ -116,8 +117,32 @@ class _CatalogoPageState extends State<CatalogoPage> {
           ),
         ],
       ),
-    );
+  floatingActionButton: Padding(
+    padding: const EdgeInsets.only(bottom: 16.0, right: 16.0), 
+    child: FloatingActionButton.extended(
+      onPressed: () {
+        // Adicione a ação para exibir as combinações existentes aqui
+        _exibirCombinacoesDialog(context);
+      },
+      icon: const Icon(Icons.help_outline), 
+      label: const Text('Cores Combinantes'), 
+    ),
+  ),
+  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+);
   }
+
+
+  void _exibirCombinacoesDialog(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (BuildContext context) {
+      return CombinacoesDialog();
+    },
+  );
+}
+
 
   Future<void> _exibirQRCodeScannerDialog(BuildContext context) async {
     String? idDoProduto = ''; // Armazenar o ID do produto aqui

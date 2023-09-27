@@ -11,7 +11,7 @@ import 'package:logger/logger.dart';
 //================================================< DataBase >===================================================//
 
 class DatabaseProvider {
-  static const _databaseName = 'seu_banco.db';
+  static const _databaseName = 'tonalize.db';
   static const _databaseVersion = 1;
 
   DatabaseProvider._();
@@ -67,8 +67,6 @@ class DatabaseProvider {
       nome TEXT,
       cor TEXT,
       corNome TEXT,
-      tamanho TEXT,
-      preco REAL,
       qrCode TEXT
     )
   ''');
@@ -205,8 +203,6 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
       nome: maps[i]['nome'],
       cor: maps[i]['cor'],
       corNome: maps[i]['corNome'],
-      tamanho: maps[i]['tamanho'],
-      preco: maps[i]['preco'],
       qrCode: maps[i]['qrCode'],
     );
   });
@@ -229,8 +225,6 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
       nome: maps[i]['nome'],
       cor: maps[i]['cor'],
       corNome: maps[i]['corNome'],
-      tamanho: maps[i]['tamanho'],
-      preco: maps[i]['preco'],
       qrCode: maps[i]['qrCode'],
     );
 
@@ -254,8 +248,6 @@ Future<List<Produto>> getProdutosPorCores(List<String> coresCombinantes) async {
         nome: maps[0]['nome'],
         cor: maps[0]['cor'],
         corNome: maps[0]['corNome'],
-        tamanho: maps[0]['tamanho'],
-        preco: maps[0]['preco'],
         qrCode: maps[0]['qrCode'],
       );
     } else {

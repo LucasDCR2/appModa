@@ -129,8 +129,7 @@ class _ProdutosComMesmaCorWidgetState extends State<ProdutosComMesmaCorWidget> {
                           ],
                         ),
                         const SizedBox(height: 2),
-                        Text(
-                          'R\$ ${produto.preco.toStringAsFixed(2)}',
+                        Text('QrCódigo: ${produto.id}',
                           style: const TextStyle(
                               color: Colors.green, fontWeight: FontWeight.bold),
                         ),

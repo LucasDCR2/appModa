@@ -150,6 +150,7 @@ class _GerenciarCoresPageState extends State<GerenciarCoresPage> {
                   if (corId != null) {
                     debugPrint("ID da cor a ser excluída: $corId");
                     await DatabaseProvider.instance.deleteCor(corId);
+                    _carregarCoresDisponiveis();
                     Navigator.of(context).pop();
                   }
                 }
@@ -314,10 +315,8 @@ void _exibirCombinacoesDialog(BuildContext context) {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(height:
-                                                  10), 
-                                          Text(
-                                              nomeCorCombinante), 
+                                          SizedBox(height: 10), 
+                                          Text(nomeCorCombinante), 
                                         ],
                                       ),
                                     ],
@@ -342,16 +341,12 @@ void _exibirCombinacoesDialog(BuildContext context) {
   );
 }
 
-
-
-
-
   @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       title: Image.asset('images/Logo_Tonalize.png',
-            width: 140, height: 60),
+            width: 130, height: 100),
       centerTitle: true,
     ),
     body: Center(

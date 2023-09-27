@@ -25,20 +25,22 @@ class ProdutoItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  produto.nome,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                  ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    produto.nome.length > 14
+                        ? '${produto.nome.substring(0, 14)}...'
+                        : produto.nome,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ), 
                 ),
-                const SizedBox(height: 12.0),
-                Text('QrCódigo: ${produto.id}'),
+                const SizedBox(height: 30.0),
                 Row(
                   children: [
-                    Text(
-                      'Cor: ${produto.corNome}',
-                    ),
+                    Text('Cor: ${produto.corNome}'),
                     const SizedBox(width: 6.0),
                     Container(
                       width: 16, 
@@ -51,7 +53,7 @@ class ProdutoItem extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text('R\$ ${produto.preco.toStringAsFixed(2)}',
+                Text('QrCódigo: ${produto.id}',
                     style: const TextStyle(
                         color: Colors.green, fontWeight: FontWeight.bold)),
               ],

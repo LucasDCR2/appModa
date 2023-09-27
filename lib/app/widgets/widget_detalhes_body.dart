@@ -38,13 +38,13 @@ class DetalhesProdutoWidget extends StatelessWidget {
             ),
           ),
         // Exibir as informações do produto aqui
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 20, // Largura da caixa de cor
-              height: 20, // Altura da caixa de cor
+              width: 40, // Largura da caixa de cor
+              height: 40, // Altura da caixa de cor
               decoration: BoxDecoration(
                 color: Color(int.parse('0xFF${produto.cor.substring(1)}')),
                 borderRadius: BorderRadius.circular(5),
@@ -53,18 +53,12 @@ class DetalhesProdutoWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               'Cor: ${produto.corNome}',
-              style: const TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 18),
             ),
           ],
         ),
-        const SizedBox(height: 10),
-        Text(
-          'Tamanho: ${produto.tamanho}',
-          style: const TextStyle(fontSize: 16),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          'R\$ ${produto.preco.toStringAsFixed(2)}',
+        const SizedBox(height: 40),
+        Text('QrCódigo: ${produto.id}',
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,

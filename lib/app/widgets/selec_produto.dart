@@ -38,11 +38,9 @@ class TelaSelecaoProduto extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Código QrCode: ${produto.id}'),
                           Text(produto.nome),
                           Text('Cor: ${produto.corNome}'),
-                          Text(
-                              'Preço: R\$ ${produto.preco.toStringAsFixed(2)}'),
+                          Text('Código QrCode: ${produto.id}'),
                         ],
                       ),
                     ),

@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Image.asset('images/Logo_Tonalize.png',
-            width: 140, height: 60),
+            width: 130, height: 100),
         centerTitle: true,
         actions: [
           IconButton(

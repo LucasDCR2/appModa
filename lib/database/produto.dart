@@ -7,8 +7,6 @@ class Produto {
   String nome;
   String cor;
   String corNome;
-  String tamanho;
-  double preco;
   String? qrCode; // Propriedade para armazenar o código QR
 
   Produto({
@@ -17,8 +15,6 @@ class Produto {
     required this.nome,
     required this.cor,
     required this.corNome,
-    required this.tamanho,
-    required this.preco,
     this.qrCode, // Inicialize como nulo
   });
 
@@ -29,8 +25,6 @@ class Produto {
       'nome': nome,
       'cor': cor,
       'corNome': corNome,
-      'tamanho': tamanho,
-      'preco': preco,
       'qrCode': qrCode,
     };
   }
