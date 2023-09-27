@@ -1,41 +1,17 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'database/database_helper.dart';
+import 'database/database_helper.dart'; 
 import 'app/home_page.dart';
-import 'app/widgets/widget_splash_screen.dart';
 import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final databaseProvider = DatabaseProvider.instance;
-  await databaseProvider.initializeDatabase();
+  await databaseProvider.initializeDatabase(); 
 
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Tonalize',
-      theme: ThemeData(
-        primarySwatch: customPurple,
-        brightness: isDarkTheme ? Brightness.dark : Brightness.light,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: customPurple,
-        ),
-      ),
-      home: Container(), // Defina uma tela vazia como tela de inicialização padrão
-      builder: (context, child) {
-        return SplashScreen(
-          onSplashComplete: () {
-            runApp(
-              const MyApp(),
-            );
-          },
-        );
-      },
-    ),
-  );
+  runApp(const MyApp());
 }
-
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -49,7 +25,7 @@ class _MyAppState extends State<MyApp> {
 
   void _trocarTema() {
     setState(() {
-      _isDarkTheme = !_isDarkTheme;
+      _isDarkTheme = !_isDarkTheme; 
     });
   }
 
@@ -59,15 +35,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Tonalize',
       theme: ThemeData(
-        primarySwatch: customPurple,
+        primarySwatch: customPurple, // Usar o MaterialColor personalizado
         brightness: _isDarkTheme ? Brightness.dark : Brightness.light,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: customPurple,
+        appBarTheme: AppBarTheme(
+          backgroundColor: customPurple, // Define a cor de fundo da AppBar
         ),
       ),
-      home: HomePage(
-        trocarTema: _trocarTema, 
-      ),
+      home: HomePage(trocarTema: _trocarTema),
     );
   }
 }

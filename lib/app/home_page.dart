@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                 // Substitua a lógica fictícia abaixo pelo seu próprio sistema de autenticação.
                 String name = nameController.text;
                 String password = passwordController.text;
-                bool isAdminValid = (name == 'admin' && password == 'admin');
+                bool isAdminValid = (name == 'adm' && password == 'adm');
 
                 if (isAdminValid) {
                   Navigator.of(context).pop(true); // Indica login bem-sucedido
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('images/Logo_Tonalize.png',
+        title: Image.asset('images/logo_tonalize.png',
             width: 130, height: 100),
         centerTitle: true,
         actions: [

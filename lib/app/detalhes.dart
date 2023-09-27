@@ -15,7 +15,7 @@ class DetalhesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('images/Logo_Tonalize.png',
+        title: Image.asset('images/logo_tonalize.png',
             width: 130, height: 100),
             centerTitle: true,
         actions: [
