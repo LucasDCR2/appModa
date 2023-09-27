@@ -41,107 +41,118 @@ class _ProdutosComMesmaCorWidgetState extends State<ProdutosComMesmaCorWidget> {
     return produtosFiltrados;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 250,
-      child: FutureBuilder<List<Produto>>(
-        future: produtosFiltrados,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Erro: ${snapshot.error}');
-          } else {
-            final produtosFiltrados = snapshot.data ?? [];
-            if (produtosFiltrados.isEmpty) {
-              return const Center(
-                child: Text(
-                  'Nenhum produto encontrado.',
-                  style: TextStyle(color: Colors.red),
-                ),
-              );
-            }
-            return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: produtosFiltrados.length,
-              itemBuilder: (context, index) {
-                final produto = produtosFiltrados[index];
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetalhesPage(produto: produto),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 120,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 4,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.memory(
-                              produto.imagem!,
-                              height: 100,
-                              width: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          produto.nome,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(height: 12.0),
-                        Row(
-                          children: [
-                            Text(
-                              'Cor: ${produto.corNome}',
-                            ),
-                            const SizedBox(width: 6.0),
-                            Container(
-                              width: 16,
-                              height: 16,
-                              decoration: BoxDecoration(
-                                color: Color(int.parse(
-                                    '0xFF${produto.cor.substring(1)}')),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
+ @override
+Widget build(BuildContext context) {
+  final screenHeight = 250.0; // Defina a altura da tela desejada em unidades lógicas
+
+  return SizedBox(
+    width: double.infinity,
+    height: screenHeight,
+    child: FutureBuilder<List<Produto>>(
+      future: produtosFiltrados,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          return Text('Erro: ${snapshot.error}');
+        } else {
+          final produtosFiltrados = snapshot.data ?? [];
+          if (produtosFiltrados.isEmpty) {
+            return const Center(
+              child: Text(
+                'Nenhum produto encontrado.',
+                style: TextStyle(color: Colors.red),
+              ),
+            );
+          }
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: produtosFiltrados.length,
+            itemBuilder: (context, index) {
+              final produto = produtosFiltrados[index];
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DetalhesPage(produto: produto),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: screenHeight * 0.48, // Defina a largura como 48% da altura da tela
+                        height: screenHeight * 0.6, // Defina a altura como 60% da altura da tela
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 3),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 2),
-                        Text('QrCódigo: ${produto.id}',
-                          style: const TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.memory(
+                            produto.imagem!,
+                            height: screenHeight * 0.4, // Defina a altura como 40% da altura da tela
+                            width: screenHeight * 0.4, // Defina a largura como 40% da altura da tela
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                            height: screenHeight *
+                                0.04), // Espaçamento de 4% da altura da tela
+                        Text(
+                          produto.nome.length <= 12
+                              ? produto.nome
+                              : '${produto.nome.substring(0, 12)}...',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(
+                            height: screenHeight *
+                                0.048), // Espaçamento de 4.8% da altura da tela
+                        Row(
+                        children: [
+                          Text(
+                            'Cor: ${produto.corNome}', 
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          SizedBox(width: screenHeight * 0.02), // Espaçamento de 1.2% da altura da tela
+                          Container(
+                            width: screenHeight * 0.065, // Largura de 3.2% da altura da tela
+                            height: screenHeight * 0.065, // Altura de 3.2% da altura da tela
+                            decoration: BoxDecoration(
+                              color: Color(int.parse(
+                                  '0xFF${produto.cor.substring(1)}')),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: screenHeight * 0.004), // Espaçamento de 0.4% da altura da tela
+                      Text(
+                        'QrCódigo: ${produto.id}',
+                        style: const TextStyle(
+                            color: Colors.green, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                );
-              },
-            );
-          }
-        },
-      ),
-    );
-  }
+                ),
+              );
+            },
+          );
+        }
+      },
+    ),
+  );
+}
+
 }
