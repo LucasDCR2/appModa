@@ -176,11 +176,20 @@ class _CatalogoPageState extends State<CatalogoPage> {
                   labelText: 'QR Code Lido',
                 ),
               ),*/
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 2.0),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
-                  _navegarParaDetalhes(context, idDoProduto);
+                  if (idDoProduto != null) {
+                    Navigator.of(context).pop();
+                    _navegarParaDetalhes(context, idDoProduto);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content:
+                            Text('Por favor, insira um ID de produto válido.'),
+                      ),
+                    );
+                  }
                 },
                 child: const Text('Pesquisar'),
               ),
@@ -204,41 +213,30 @@ class _CatalogoPageState extends State<CatalogoPage> {
     );
   }
 
-  void _navegarParaDetalhes(BuildContext context, String? idDoProduto) {
-    if (idDoProduto != null && idDoProduto.isNotEmpty) {
-      final int id = int.tryParse(idDoProduto) ?? 0;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => FutureBuilder<Produto?>(
-            future: DatabaseProvider.instance.getProdutoPorId(id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Erro ao carregar o produto do banco de dados.'),
-                );
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(
-                  child: Text('Produto não encontrado.'),
-                );
-              } else {
-                final produto = snapshot.data!;
-                return DetalhesPage(produto: produto);
-              }
-            },
-          ),
-        ),
-      );
+void _navegarParaDetalhes(BuildContext context, String? idDoProduto) async {
+  if (idDoProduto != null && idDoProduto.isNotEmpty) {
+    final int id = int.tryParse(idDoProduto) ?? 0;
+
+    final produtoExiste = await DatabaseProvider.instance.verificaProdutoExiste(id);
+
+    if (produtoExiste) {
+      Navigator.of(context).pop();
+      // Continue com a navegação para os detalhes do produto aqui
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Por favor, insira um ID de produto válido.'),
+          content: Text('Produto não encontrado.'),
         ),
       );
     }
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Por favor, insira um ID de produto válido.'),
+      ),
+    );
   }
+}
+
+
 }

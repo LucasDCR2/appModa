@@ -320,6 +320,17 @@ Future<void> atualizarProduto(Produto produto, BuildContext context) async {
   );
 }
 
+Future<bool> verificaProdutoExiste(int id) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query(
+      'produtos',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return maps.isNotEmpty; // Retorna true se houver resultados (o ID existe), caso contrário, retorna false.
+  }
 }
 
 
