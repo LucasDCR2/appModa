@@ -238,7 +238,7 @@ void _navegarParaDetalhes(BuildContext context, String? idDoProduto) async {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Produto não encontrado.'),
+          content: Text('QR Code inválido.'),
         ),
       );
     }
