@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                       : 'Entrar como Admin',
                 ),
               ),
-            SizedBox(height: 200),
+            SizedBox(height: 150),
             if (isAdminVisible)
               ElevatedButton.icon(
                 onPressed: () {
