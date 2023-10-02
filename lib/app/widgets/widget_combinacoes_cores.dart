@@ -89,8 +89,7 @@ class _CombinacoesDialogState extends State<CombinacoesDialog> {
                                           height: 80,
                                           decoration: BoxDecoration(
                                             color: corCombinante,
-                                            borderRadius:
-                                                BorderRadius.circular(40.0),
+                                            borderRadius: BorderRadius.circular(40.0),
                                             border: Border.all(
                                               color: Colors.white,
                                               width: 1.0,

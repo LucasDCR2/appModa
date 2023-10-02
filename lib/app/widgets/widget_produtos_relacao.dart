@@ -39,15 +39,24 @@ Future<List<Produto>> _carregarProdutosFiltrados() async {
   // Combinar cores combinantes e cores principais
   final coresRelacionadas = [...coresCombinantes, ...coresPrincipais];
 
+  final Set<int> idsProdutosAdicionados = {}; // Criar um conjunto para rastrear IDs de produtos adicionados
+
   final List<Produto> produtosFiltrados = [];
 
-  for (final corRelacionada in coresRelacionadas) {
-    final produtos = await DatabaseProvider.instance.getProdutosPorCores([corRelacionada]);
-    produtosFiltrados.addAll(produtos);
-  }
+    for (final corRelacionada in coresRelacionadas) {
+      final produtos = await DatabaseProvider.instance.getProdutosPorCores([corRelacionada]);
+      for (final produto in produtos) {
+        final idProduto = produto.id ?? 0;
+        if (!idsProdutosAdicionados.contains(idProduto)) {
+          produtosFiltrados.add(produto);
+          idsProdutosAdicionados.add(idProduto); // Adicionar o ID do produto ao conjunto
+        }
+      }
+    }
 
   return produtosFiltrados;
 }
+
 
 
  @override
