@@ -141,8 +141,8 @@ class _AdminPageState extends State<AdminPage> {
                 onPressed: () async {
                   await _excluirProdutosDialog(context);
                 },
-                icon: const Icon(Icons.delete),
-                label: const Text('Excluir Todos os Produtos'),
+                icon: const Icon(Icons.delete, color: Colors.white),
+                label: const Text('Excluir Todos os Produtos', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   shape: RoundedRectangleBorder(
@@ -229,53 +229,51 @@ void _mostrarBottomSheetAdicionarProduto(BuildContext context) {
                           controller: nomeCorSelecionadaController,
                           labelText: 'Nome da Cor Selecionada',
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 1),
                         const Center(child: Text('Selecione uma Cor: ', style: TextStyle(fontSize: 16),)),
                         
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: SizedBox(
-                              height: 300,
-                              child: GridView.builder(
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 6,
-                                  crossAxisSpacing: 8.0,
-                                  mainAxisSpacing: 8.0,
-                                ),
-                                itemCount: listaDeCoresDisponiveis.length,
-                                itemBuilder: (context, index) {
-                                  final cor = listaDeCoresDisponiveis[index];
-                                  final isSelected = _corSelecionada == cor;
-                                  final scaleFactor = isSelected ? 1.2 : 1.0;
+                        Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SizedBox(
+                            height: 300,
+                            child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 6,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 8.0,
+                              ),
+                              itemCount: listaDeCoresDisponiveis.length,
+                              itemBuilder: (context, index) {
+                                final cor = listaDeCoresDisponiveis[index];
+                                final isSelected = _corSelecionada == cor;
+                                final scaleFactor = isSelected ? 1.2 : 1.0;
                         
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        _corSelecionada = cor;
-                                        nomeCorSelecionadaController.text = _corSelecionada != null ? _corSelecionada!.nome : '';
-                                      });
-                                    },
-                                    child: Transform.scale(
-                                      scale: scaleFactor,
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
-                                          border: Border.all(
-                                            color: isSelected
-                                                ? Colors.black
-                                                : Colors.black,
-                                            width: 1,
-                                          ),
-                                          borderRadius: BorderRadius.circular(10.0),
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _corSelecionada = cor;
+                                      nomeCorSelecionadaController.text = _corSelecionada != null ? _corSelecionada!.nome : '';
+                                    });
+                                  },
+                                  child: Transform.scale(
+                                    scale: scaleFactor,
+                                    child: Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? Colors.black
+                                              : Colors.black,
+                                          width: 1,
                                         ),
+                                        borderRadius: BorderRadius.circular(10.0),
                                       ),
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -485,7 +483,6 @@ void _mostrarBottomSheetEditarProduto(BuildContext context, Produto produto) {
   );
 }
 
-
 void _mostrarBottomSheetAdicionarCor(BuildContext context) {
     TextEditingController nomeController = TextEditingController();
     TextEditingController codigoController = TextEditingController();
@@ -683,66 +680,68 @@ void _mostrarBottomSheetCombinarCores(BuildContext context) {
                       const SizedBox(height: 20),
                       const Center(child: Text('Selecione duas cores:', style: TextStyle(fontSize: 16),)),
                       Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: Wrap(
-                          spacing: 8.0,
-                          runSpacing: 8.0,
-                          children: listaDeCoresDisponiveis.map((cor) {
-                            final isSelected = selectedColors.contains(cor);
-                            final scaleFactor = isSelected ? 1.2 : 1.0;
-
-                            return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    if (isSelected) {
-                                      selectedColors.remove(cor);
-                                      corPrincipalController.clear();
-                                      codigoCorPrincipalController.clear();
-                                      corCombinanteController.clear();
-                                      codigoCorCombinanteController.clear();
-                                    } else {
-                                      if (selectedColors.length < 2) {
-                                        selectedColors.add(cor);
+                        padding: const EdgeInsets.all(20.0),
+                        child: Center(
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 8.0,
+                            children: listaDeCoresDisponiveis.map((cor) {
+                              final isSelected = selectedColors.contains(cor);
+                              final scaleFactor = isSelected ? 1.2 : 1.0;
+                        
+                              return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (isSelected) {
+                                        selectedColors.remove(cor);
+                                        corPrincipalController.clear();
+                                        codigoCorPrincipalController.clear();
+                                        corCombinanteController.clear();
+                                        codigoCorCombinanteController.clear();
+                                      } else {
+                                        if (selectedColors.length < 2) {
+                                          selectedColors.add(cor);
+                                        }
                                       }
+                        
+                                      if (selectedColors.length == 1) {
+                                      final selectedColor = selectedColors.first;
+                        
+                                      corPrincipalController.text = selectedColor.nome;
+                                      codigoCorPrincipalController.text = selectedColor.cor;
+                        
+                                    } else if (selectedColors.length == 2) {
+                        
+                                      final firstSelectedColor = selectedColors.first;
+                                      final secondSelectedColor = selectedColors.last;
+                        
+                                      corPrincipalController.text = firstSelectedColor.nome;
+                                      codigoCorPrincipalController.text = firstSelectedColor.cor;
+                                      corCombinanteController.text = secondSelectedColor.nome;
+                                      codigoCorCombinanteController.text = secondSelectedColor.cor;
                                     }
-
-                                    if (selectedColors.length == 1) {
-                                    final selectedColor = selectedColors.first;
-
-                                    corPrincipalController.text = selectedColor.nome;
-                                    codigoCorPrincipalController.text = selectedColor.cor;
-
-                                  } else if (selectedColors.length == 2) {
-
-                                    final firstSelectedColor = selectedColors.first;
-                                    final secondSelectedColor = selectedColors.last;
-
-                                    corPrincipalController.text = firstSelectedColor.nome;
-                                    codigoCorPrincipalController.text = firstSelectedColor.cor;
-                                    corCombinanteController.text = secondSelectedColor.nome;
-                                    codigoCorCombinanteController.text = secondSelectedColor.cor;
-                                  }
-                                });
-                              },
-                              child: Transform.scale(
-                                scale: scaleFactor,
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? Colors.black
-                                          : Colors.black,
-                                      width: 1,
+                                  });
+                                },
+                                child: Transform.scale(
+                                  scale: scaleFactor,
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color: Color(int.parse('0xFF${cor.cor.substring(1)}')),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? Colors.black
+                                            : Colors.black,
+                                        width: 1,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.0),
                                     ),
-                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ],
@@ -897,16 +896,28 @@ Future<void> _adicionarCor(String nome, String cor) async {
   }
 
 Future<void> _combinarCores(String corPrincipal, String codigoCorPrincipal,
-      String corCombinante, String codigoCorCombinante) async {
-    final db = await DatabaseProvider.instance.database;
-    await db.insert('cores_combinantes', {
-      'corPrincipal': corPrincipal,
-      'codigoCorPrincipal': codigoCorPrincipal,
-      'corCombinante': corCombinante,
-      'codigoCorCombinante': codigoCorCombinante,
-    });
-    debugPrint('Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
-  }
+    String corCombinante, String codigoCorCombinante) async {
+  final db = await DatabaseProvider.instance.database;
+  
+  // Insira a combinação original
+  await db.insert('cores_combinantes', {
+    'corPrincipal': corPrincipal,
+    'codigoCorPrincipal': codigoCorPrincipal,
+    'corCombinante': corCombinante,
+    'codigoCorCombinante': codigoCorCombinante,
+  });
+
+  // Insira a combinação invertida (bidirecional)
+  await db.insert('cores_combinantes', {
+    'corPrincipal': corCombinante,
+    'codigoCorPrincipal': codigoCorCombinante,
+    'corCombinante': corPrincipal,
+    'codigoCorCombinante': codigoCorPrincipal,
+  });
+
+  debugPrint('Cores combinadas - Cor Principal: $corPrincipal, Código Principal: $codigoCorPrincipal, Cor Combinante: $corCombinante, Código Combinante: $codigoCorCombinante');
+}
+
 
 Future<void> _excluirProduto(Produto produto, BuildContext context) async {
 

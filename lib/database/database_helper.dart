@@ -75,74 +75,164 @@ class DatabaseProvider {
 //================================================< Tabela Cores >===================================================//
 
 
-    await db.execute('''
-    CREATE TABLE cores (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT,
-      cor TEXT
-    )
-  ''');
+await db.execute('''
+  CREATE TABLE cores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT,
+    cor TEXT
+  )
+''');
 
-    // Insira algumas cores iniciais
-    final cores = [
-      {'nome': 'Vermelho', 'cor': '#FF0000'},
-      {'nome': 'Azul', 'cor': '#0000FF'},
-      {'nome': 'Verde', 'cor': '#00FF00'},
-      {'nome': 'Amarelo', 'cor': '#FFFF00'},
-      {'nome': 'Roxo', 'cor': '#800080'},
-      {'nome': 'Laranja', 'cor': '#FFA500'},
-      {'nome': 'Preto', 'cor': '#000000'},
-      {'nome': 'Branco', 'cor': '#FFFFFF'},
-      {'nome': 'Cinza', 'cor': '#808080'},
-    ];
+// Insira algumas cores iniciais
+final cores = [
+  {'nome': 'Rosa 1', 'cor': '#45060e'},
+  {'nome': 'Rosa 2', 'cor': '#ba073f'},
+  {'nome': 'Rosa 3', 'cor': '#e78ba4'},
+  {'nome': 'Vermelho 1', 'cor': '#6c0506'},
+  {'nome': 'Vermelho 2', 'cor': '#f50415'},
+  {'nome': 'Vermelho 3', 'cor': '#fe6673'},
+  {'nome': 'Laranja Escuro 1', 'cor': '#ab2e10'},
+  {'nome': 'Laranja Escuro 2', 'cor': '#fd4919'},
+  {'nome': 'Laranja Escuro 3', 'cor': '#ff8264'},
+  {'nome': 'Laranja Médio 1', 'cor': '#c76404'},
+  {'nome': 'Laranja Médio 2', 'cor': '#ff8e02'},
+  {'nome': 'Laranja Médio 3', 'cor': '#fec786'},
+  {'nome': 'Laranja Claro 1', 'cor': '#9a6900'},
+  {'nome': 'Laranja Claro 2', 'cor': '#ffb400'},
+  {'nome': 'Laranja Claro 3', 'cor': '#ffd778'},
+  {'nome': 'Amarelo 1', 'cor': '#a29200'},
+  {'nome': 'Amarelo 2', 'cor': '#feef00'},
+  {'nome': 'Amarelo 3', 'cor': '#fff394'},
+  {'nome': 'Verde Claro 1', 'cor': '#778a06'},
+  {'nome': 'Verde Claro 2', 'cor': '#b2ce00'},
+  {'nome': 'Verde Claro 3', 'cor': '#d7e46d'},
+  {'nome': 'Verde Escuro 1', 'cor': '#015d07'},
+  {'nome': 'Verde Escuro 2', 'cor': '#00a900'},
+  {'nome': 'Verde Escuro 3', 'cor': '#99d492'},
+  {'nome': 'Azul Claro 1', 'cor': '#003f37'},
+  {'nome': 'Azul Claro 2', 'cor': '#05978b'},
+  {'nome': 'Azul Claro 3', 'cor': '#a9e4de'},
+  {'nome': 'Azul Médio 1', 'cor': '#0b1141'},
+  {'nome': 'Azul Médio 2', 'cor': '#0497d1'},
+  {'nome': 'Azul Médio 3', 'cor': '#d4ecf6'},
+  {'nome': 'Azul Escuro 1', 'cor': '#1c2a4f'},
+  {'nome': 'Azul Escuro 2', 'cor': '#3c5190'},
+  {'nome': 'Azul Escuro 3', 'cor': '#bbc1d7'},
+  {'nome': 'Roxo 1', 'cor': '#1b0035'},
+  {'nome': 'Roxo 2', 'cor': '#3f2378'},
+  {'nome': 'Roxo 3', 'cor': '#947aba'},
+];
 
-    for (final corData in cores) {
-      await db.insert('cores', corData);
-    }
+for (final corData in cores) {
+  await db.insert('cores', corData);
+}
+
 
 
 //===========================================< Tabela Cores Combinantes >=============================================//
 
 
-    await db.execute('''
-      CREATE TABLE cores_combinantes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        corPrincipal TEXT,
-        codigoCorPrincipal TEXT, 
-        corCombinante TEXT,
-        codigoCorCombinante TEXT  
-      )
-  ''');
+await db.execute('''
+  CREATE TABLE cores_combinantes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    corPrincipal TEXT,
+    codigoCorPrincipal TEXT, 
+    corCombinante TEXT,
+    codigoCorCombinante TEXT  
+  )
+''');
 
-    final coresCombinantes = [];
-      /*{
-        'corPrincipal': 'Azul',
-        'codigoCorPrincipal': '#0000FF',
-        'corCombinante': 'Azul',
-        'codigoCorCombinante': '#0000FF'
-      },
-      {
-        'corPrincipal': 'Azul',
-        'codigoCorPrincipal': '#0000FF',
-        'corCombinante': 'Verde',
-        'codigoCorCombinante': '#00FF00'
-      },
-      {
-        'corPrincipal': 'Vermelho',
-        'codigoCorPrincipal': '#FF0000',
-        'corCombinante': 'Vermelho',
-        'codigoCorCombinante': '#FF0000'
-      },
-      {
-        'corPrincipal': 'Vermelho',
-        'codigoCorPrincipal': '#FF0000',
-        'corCombinante': 'Roxo',
-        'codigoCorCombinante': '#800080'
-      },
-      // Adicione outras relações de cores combinantes conforme necessário
-    ];*/
+    final coresCombinantes = [
+      {'corPrincipal': 'Rosa 1', 'codigoCorPrincipal': '#45060e', 'corCombinante': 'Verde Claro 1', 'codigoCorCombinante': '#778a06'},
+      {'corPrincipal': 'Rosa 2', 'codigoCorPrincipal': '#ba073f', 'corCombinante': 'Verde Claro 2', 'codigoCorCombinante': '#b2ce00'},
+      {'corPrincipal': 'Rosa 3', 'codigoCorPrincipal': '#e78ba4', 'corCombinante': 'Verde Claro 3', 'codigoCorCombinante': '#d7e46d'},
+      {'corPrincipal': 'Vermelho 1', 'codigoCorPrincipal': '#6c0506', 'corCombinante': 'Verde Escuro 1', 'codigoCorCombinante': '#015d07'},
+      {'corPrincipal': 'Vermelho 2', 'codigoCorPrincipal': '#f50415', 'corCombinante': 'Verde Escuro 2', 'codigoCorCombinante': '#00a900'},
+      {'corPrincipal': 'Vermelho 3', 'codigoCorPrincipal': '#fe6673', 'corCombinante': 'Verde Escuro 3', 'codigoCorCombinante': '#99d492'},
+      {'corPrincipal': 'Laranja Escuro 1', 'codigoCorPrincipal': '#ab2e10', 'corCombinante': 'Azul Claro 1', 'codigoCorCombinante': '#003f37'},
+      {'corPrincipal': 'Laranja Escuro 2', 'codigoCorPrincipal': '#fd4919', 'corCombinante': 'Azul Claro 2', 'codigoCorCombinante': '#05978b'},
+      {'corPrincipal': 'Laranja Escuro 3', 'codigoCorPrincipal': '#ff8264', 'corCombinante': 'Azul Claro 3', 'codigoCorCombinante': '#a9e4de'},
+      {'corPrincipal': 'Laranja Médio 1', 'codigoCorPrincipal': '#c76404', 'corCombinante': 'Azul Médio 1', 'codigoCorCombinante': '#0b1141'},
+      {'corPrincipal': 'Laranja Médio 2', 'codigoCorPrincipal': '#ff8e02', 'corCombinante': 'Azul Médio 2', 'codigoCorCombinante': '#0497d1'},
+      {'corPrincipal': 'Laranja Médio 3', 'codigoCorPrincipal': '#fec786', 'corCombinante': 'Azul Médio 3', 'codigoCorCombinante': '#d4ecf6'},
+      {'corPrincipal': 'Laranja Claro 1', 'codigoCorPrincipal': '#9a6900', 'corCombinante': 'Azul Escuro 1', 'codigoCorCombinante': '#1c2a4f'},
+      {'corPrincipal': 'Laranja Claro 2', 'codigoCorPrincipal': '#ffb400', 'corCombinante': 'Azul Escuro 2', 'codigoCorCombinante': '#3c5190'},
+      {'corPrincipal': 'Laranja Claro 3', 'codigoCorPrincipal': '#ffd778', 'corCombinante': 'Azul Escuro 3', 'codigoCorCombinante': '#bbc1d7'},
+      {'corPrincipal': 'Amarelo 1', 'codigoCorPrincipal': '#a29200', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Amarelo 2', 'codigoCorPrincipal': '#feef00', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Amarelo 3', 'codigoCorPrincipal': '#fff394', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+      {'corPrincipal': 'Rosa 1', 'codigoCorPrincipal': '#45060e', 'corCombinante': 'Vermelho 1', 'codigoCorCombinante': '#6c0506'},
+      {'corPrincipal': 'Rosa 2', 'codigoCorPrincipal': '#ba073f', 'corCombinante': 'Vermelho 2', 'codigoCorCombinante': '#f50415'},
+      {'corPrincipal': 'Rosa 3', 'codigoCorPrincipal': '#e78ba4', 'corCombinante': 'Vermelho 3', 'codigoCorCombinante': '#fe6673'},
+      {'corPrincipal': 'Vermelho 1', 'codigoCorPrincipal': '#6c0506', 'corCombinante': 'Laranja Escuro 1', 'codigoCorCombinante': '#ab2e10'},
+      {'corPrincipal': 'Vermelho 2', 'codigoCorPrincipal': '#f50415', 'corCombinante': 'Laranja Escuro 2', 'codigoCorCombinante': '#fd4919'},
+      {'corPrincipal': 'Vermelho 3', 'codigoCorPrincipal': '#fe6673', 'corCombinante': 'Laranja Escuro 3', 'codigoCorCombinante': '#ff8264'},
+      {'corPrincipal': 'Laranja Escuro 1', 'codigoCorPrincipal': '#ab2e10', 'corCombinante': 'Laranja Médio 1', 'codigoCorCombinante': '#c76404'},
+      {'corPrincipal': 'Laranja Escuro 2', 'codigoCorPrincipal': '#fd4919', 'corCombinante': 'Laranja Médio 2', 'codigoCorCombinante': '#ff8e02'},
+      {'corPrincipal': 'Laranja Escuro 3', 'codigoCorPrincipal': '#ff8264', 'corCombinante': 'Laranja Médio 3', 'codigoCorCombinante': '#fec786'},
+      {'corPrincipal': 'Laranja Médio 1', 'codigoCorPrincipal': '#c76404', 'corCombinante': 'Laranja Claro 1', 'codigoCorCombinante': '#9a6900'},
+      {'corPrincipal': 'Laranja Médio 2', 'codigoCorPrincipal': '#ff8e02', 'corCombinante': 'Laranja Claro 2', 'codigoCorCombinante': '#ffb400'},
+      {'corPrincipal': 'Laranja Médio 3', 'codigoCorPrincipal': '#fec786', 'corCombinante': 'Laranja Claro 3', 'codigoCorCombinante': '#ffd778'},
+      {'corPrincipal': 'Laranja Claro 1', 'codigoCorPrincipal': '#9a6900', 'corCombinante': 'Amarelo 1', 'codigoCorCombinante': '#a29200'},
+      {'corPrincipal': 'Laranja Claro 2', 'codigoCorPrincipal': '#ffb400', 'corCombinante': 'Amarelo 2', 'codigoCorCombinante': '#feef00'},
+      {'corPrincipal': 'Laranja Claro 3', 'codigoCorPrincipal': '#ffd778', 'corCombinante': 'Amarelo 3', 'codigoCorCombinante': '#fff394'},
+      {'corPrincipal': 'Amarelo 1', 'codigoCorPrincipal': '#a29200', 'corCombinante': 'Verde Claro 1', 'codigoCorCombinante': '#778a06'},
+      {'corPrincipal': 'Amarelo 2', 'codigoCorPrincipal': '#feef00', 'corCombinante': 'Verde Claro 2', 'codigoCorCombinante': '#b2ce00'},
+      {'corPrincipal': 'Amarelo 3', 'codigoCorPrincipal': '#fff394', 'corCombinante': 'Verde Claro 3', 'codigoCorCombinante': '#d7e46d'},
+      {'corPrincipal': 'Verde Claro 1', 'codigoCorPrincipal': '#778a06', 'corCombinante': 'Verde Escuro 1', 'codigoCorCombinante': '#015d07'},
+      {'corPrincipal': 'Verde Claro 2', 'codigoCorPrincipal': '#b2ce00', 'corCombinante': 'Verde Escuro 2', 'codigoCorCombinante': '#00a900'},
+      {'corPrincipal': 'Verde Claro 3', 'codigoCorPrincipal': '#d7e46d', 'corCombinante': 'Verde Escuro 3', 'codigoCorCombinante': '#99d492'},
+      {'corPrincipal': 'Verde Escuro 1', 'codigoCorPrincipal': '#015d07', 'corCombinante': 'Azul Claro 1', 'codigoCorCombinante': '#003f37'},
+      {'corPrincipal': 'Verde Escuro 2', 'codigoCorPrincipal': '#00a900', 'corCombinante': 'Azul Claro 2', 'codigoCorCombinante': '#05978b'},
+      {'corPrincipal': 'Verde Escuro 3', 'codigoCorPrincipal': '#99d492', 'corCombinante': 'Azul Claro 3', 'codigoCorCombinante': '#a9e4de'},
+      {'corPrincipal': 'Azul Claro 1', 'codigoCorPrincipal': '#003f37', 'corCombinante': 'Azul Médio 1', 'codigoCorCombinante': '#0b1141'},
+      {'corPrincipal': 'Azul Claro 2', 'codigoCorPrincipal': '#05978b', 'corCombinante': 'Azul Médio 2', 'codigoCorCombinante': '#0497d1'},
+      {'corPrincipal': 'Azul Claro 3', 'codigoCorPrincipal': '#a9e4de', 'corCombinante': 'Azul Médio 3', 'codigoCorCombinante': '#d4ecf6'},
+      {'corPrincipal': 'Azul Médio 1', 'codigoCorPrincipal': '#0b1141', 'corCombinante': 'Azul Escuro 1', 'codigoCorCombinante': '#1c2a4f'},
+      {'corPrincipal': 'Azul Médio 2', 'codigoCorPrincipal': '#0497d1', 'corCombinante': 'Azul Escuro 2', 'codigoCorCombinante': '#3c5190'},
+      {'corPrincipal': 'Azul Médio 3', 'codigoCorPrincipal': '#d4ecf6', 'corCombinante': 'Azul Escuro 3', 'codigoCorCombinante': '#bbc1d7'},
+      {'corPrincipal': 'Azul Escuro 1', 'codigoCorPrincipal': '#1c2a4f', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Azul Escuro 2', 'codigoCorPrincipal': '#3c5190', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Azul Escuro 3', 'codigoCorPrincipal': '#bbc1d7', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+      {'corPrincipal': 'Roxo 1', 'codigoCorPrincipal': '#1b0035', 'corCombinante': 'Rosa 1', 'codigoCorCombinante': '#45060e'},
+      {'corPrincipal': 'Roxo 2', 'codigoCorPrincipal': '#3f2378', 'corCombinante': 'Rosa 2', 'codigoCorCombinante': '#ba073f'},
+      {'corPrincipal': 'Roxo 3', 'codigoCorPrincipal': '#947aba', 'corCombinante': 'Rosa 3', 'codigoCorCombinante': '#e78ba4'},
+      {'corPrincipal': 'Rosa 1', 'codigoCorPrincipal': '#45060e', 'corCombinante': 'Laranja Claro 1', 'codigoCorCombinante': '#9a6900'},
+      {'corPrincipal': 'Rosa 2', 'codigoCorPrincipal': '#ba073f', 'corCombinante': 'Laranja Claro 2', 'codigoCorCombinante': '#ffb400'},
+      {'corPrincipal': 'Rosa 3', 'codigoCorPrincipal': '#e78ba4', 'corCombinante': 'Laranja Claro 3', 'codigoCorCombinante': '#ffd778'},
+      {'corPrincipal': 'Vermelho 1', 'codigoCorPrincipal': '#6c0506', 'corCombinante': 'Amarelo 1', 'codigoCorCombinante': '#a29200'},
+      {'corPrincipal': 'Vermelho 2', 'codigoCorPrincipal': '#f50415', 'corCombinante': 'Amarelo 2', 'codigoCorCombinante': '#feef00'},
+      {'corPrincipal': 'Vermelho 3', 'codigoCorPrincipal': '#fe6673', 'corCombinante': 'Amarelo 3', 'codigoCorCombinante': '#fff394'},
+      {'corPrincipal': 'Laranja Escuro 1', 'codigoCorPrincipal': '#ab2e10', 'corCombinante': 'Verde Claro 1', 'codigoCorCombinante': '#778a06'},
+      {'corPrincipal': 'Laranja Escuro 2', 'codigoCorPrincipal': '#fd4919', 'corCombinante': 'Verde Claro 2', 'codigoCorCombinante': '#b2ce00'},
+      {'corPrincipal': 'Laranja Escuro 3', 'codigoCorPrincipal': '#ff8264', 'corCombinante': 'Verde Claro 3', 'codigoCorCombinante': '#d7e46d'},
+      {'corPrincipal': 'Laranja Médio 1', 'codigoCorPrincipal': '#c76404', 'corCombinante': 'Verde Escuro 1', 'codigoCorCombinante': '#015d07'},
+      {'corPrincipal': 'Laranja Médio 2', 'codigoCorPrincipal': '#ff8e02', 'corCombinante': 'Verde Escuro 2', 'codigoCorCombinante': '#00a900'},
+      {'corPrincipal': 'Laranja Médio 3', 'codigoCorPrincipal': '#fec786', 'corCombinante': 'Verde Escuro 3', 'codigoCorCombinante': '#99d492'},
+      {'corPrincipal': 'Laranja Claro 1', 'codigoCorPrincipal': '#9a6900', 'corCombinante': 'Azul Claro 1', 'codigoCorCombinante': '#003f37'},
+      {'corPrincipal': 'Laranja Claro 2', 'codigoCorPrincipal': '#ffb400', 'corCombinante': 'Azul Claro 2', 'codigoCorCombinante': '#05978b'},
+      {'corPrincipal': 'Laranja Claro 3', 'codigoCorPrincipal': '#ffd778', 'corCombinante': 'Azul Claro 3', 'codigoCorCombinante': '#a9e4de'},
+      {'corPrincipal': 'Amarelo 1', 'codigoCorPrincipal': '#a29200', 'corCombinante': 'Azul Médio 1', 'codigoCorCombinante': '#0b1141'},
+      {'corPrincipal': 'Amarelo 2', 'codigoCorPrincipal': '#feef00', 'corCombinante': 'Azul Médio 2', 'codigoCorCombinante': '#0497d1'},
+      {'corPrincipal': 'Amarelo 3', 'codigoCorPrincipal': '#fff394', 'corCombinante': 'Azul Médio 3', 'codigoCorCombinante': '#d4ecf6'},
+      {'corPrincipal': 'Verde Claro 1', 'codigoCorPrincipal': '#778a06', 'corCombinante': 'Azul Escuro 1', 'codigoCorCombinante': '#1c2a4f'},
+      {'corPrincipal': 'Verde Claro 2', 'codigoCorPrincipal': '#b2ce00', 'corCombinante': 'Azul Escuro 2', 'codigoCorCombinante': '#3c5190'},
+      {'corPrincipal': 'Verde Claro 3', 'codigoCorPrincipal': '#d7e46d', 'corCombinante': 'Azul Escuro 3', 'codigoCorCombinante': '#bbc1d7'},
+      {'corPrincipal': 'Verde Escuro 1', 'codigoCorPrincipal': '#015d07', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Verde Escuro 2', 'codigoCorPrincipal': '#00a900', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Verde Escuro 3', 'codigoCorPrincipal': '#99d492', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+      {'corPrincipal': 'Azul Claro 1', 'codigoCorPrincipal': '#003f37', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Azul Claro 2', 'codigoCorPrincipal': '#05978b', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Azul Claro 3', 'codigoCorPrincipal': '#a9e4de', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+      {'corPrincipal': 'Azul Médio 1', 'codigoCorPrincipal': '#0b1141', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Azul Médio 2', 'codigoCorPrincipal': '#0497d1', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Azul Médio 3', 'codigoCorPrincipal': '#d4ecf6', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+      {'corPrincipal': 'Azul Escuro 1', 'codigoCorPrincipal': '#1c2a4f', 'corCombinante': 'Roxo 1', 'codigoCorCombinante': '#1b0035'},
+      {'corPrincipal': 'Azul Escuro 2', 'codigoCorPrincipal': '#3c5190', 'corCombinante': 'Roxo 2', 'codigoCorCombinante': '#3f2378'},
+      {'corPrincipal': 'Azul Escuro 3', 'codigoCorPrincipal': '#bbc1d7', 'corCombinante': 'Roxo 3', 'codigoCorCombinante': '#947aba'},
+    ];
 
-    for (final relacao in coresCombinantes) {
+for (final relacao in coresCombinantes) {
       await db.insert('cores_combinantes', relacao);
     }
   }
@@ -175,6 +265,21 @@ class DatabaseProvider {
       return maps[i]['codigoCorCombinante'];
     });
   }
+
+Future<List<String>> getCoresPrincipais(String nomeCor, String codigoCorCombinante) async {
+  final db = await database;
+
+  final List<Map<String, dynamic>> maps = await db.rawQuery(
+    'SELECT corPrincipal, codigoCorPrincipal FROM cores_combinantes WHERE corCombinante = ? OR codigoCorCombinante = ?',
+    [nomeCor, codigoCorCombinante],
+  );
+
+  return List.generate(maps.length, (i) {
+    return maps[i]['codigoCorPrincipal'];
+  });
+}
+
+
 
   Future<List<Map<String, dynamic>>> carregarCombinacoesDoBanco() async {
     final db = await database;

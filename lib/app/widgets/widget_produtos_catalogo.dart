@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import '../../database/produto.dart';
 
@@ -40,7 +42,7 @@ class ProdutoItem extends StatelessWidget {
                 const SizedBox(height: 30.0),
                 Row(
                   children: [
-                    Text('Cor: ${produto.corNome}'),
+                    Text('${produto.corNome}'),
                     const SizedBox(width: 6.0),
                     Container(
                       width: 16, 

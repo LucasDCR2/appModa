@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors_in_immutables, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_declarations
 
 import 'package:flutter/material.dart';
 import 'package:tonalize/app/detalhes.dart';
@@ -27,19 +27,28 @@ class _ProdutosComMesmaCorWidgetState extends State<ProdutosComMesmaCorWidget> {
     produtosFiltrados = _carregarProdutosFiltrados();
   }
 
-  Future<List<Produto>> _carregarProdutosFiltrados() async {
-    final coresCombinantes = await DatabaseProvider.instance.getCoresCombinantes(widget.produtoAtual.corNome, widget.produtoAtual.cor);
+Future<List<Produto>> _carregarProdutosFiltrados() async {
+  final corAtual = widget.produtoAtual.corNome;
 
-    final List<Produto> produtosFiltrados = [];
+  // Buscar cores combinantes
+  final coresCombinantes = await DatabaseProvider.instance.getCoresCombinantes(corAtual, widget.produtoAtual.cor);
 
-    for (final corCombinante in coresCombinantes) {
-      final produtos =
-          await DatabaseProvider.instance.getProdutosPorCores([corCombinante]);
-      produtosFiltrados.addAll(produtos);
-    }
+  // Buscar cores principais para a cor atual (cor combinante)
+  final coresPrincipais = await DatabaseProvider.instance.getCoresPrincipais(corAtual, widget.produtoAtual.cor);
 
-    return produtosFiltrados;
+  // Combinar cores combinantes e cores principais
+  final coresRelacionadas = [...coresCombinantes, ...coresPrincipais];
+
+  final List<Produto> produtosFiltrados = [];
+
+  for (final corRelacionada in coresRelacionadas) {
+    final produtos = await DatabaseProvider.instance.getProdutosPorCores([corRelacionada]);
+    produtosFiltrados.addAll(produtos);
   }
+
+  return produtosFiltrados;
+}
+
 
  @override
 Widget build(BuildContext context) {
@@ -121,9 +130,9 @@ Widget build(BuildContext context) {
                                 0.048), // Espaçamento de 4.8% da altura da tela
                         Row(
                         children: [
-                          Text(
-                            'Cor: ${produto.corNome}', 
-                            style: const TextStyle(fontSize: 16),
+                          const Text(
+                            'Cor: ', 
+                            style: TextStyle(fontSize: 16),
                           ),
                           SizedBox(width: screenHeight * 0.02), // Espaçamento de 1.2% da altura da tela
                           Container(

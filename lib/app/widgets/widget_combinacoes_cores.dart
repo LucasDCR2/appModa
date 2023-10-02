@@ -43,20 +43,21 @@ class _CombinacoesDialogState extends State<CombinacoesDialog> {
                           itemBuilder: (BuildContext context, int index) {
                             final combinacao = combinacoes[index];
     
-                            final codigoCorPrincipal =combinacao['codigoCorPrincipal'];
-                            final codigoCorCombinante =combinacao['codigoCorCombinante'];
-                            final nomeCorPrincipal =combinacao['corPrincipal'];
-                            final nomeCorCombinante =combinacao['corCombinante'];
+                            final codigoCorPrincipal = combinacao['codigoCorPrincipal'];
+                            final codigoCorCombinante = combinacao['codigoCorCombinante'];
+                            final nomeCorPrincipal = combinacao['corPrincipal'];
+                            final nomeCorCombinante = combinacao['corCombinante'];
     
                             final corPrincipal = Color(int.parse('0xFF' + codigoCorPrincipal.substring(1)));
                             final corCombinante = Color(int.parse('0xFF' + codigoCorCombinante.substring(1)));
+
+                            int displayIndex = index + 1;
     
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 40),
-                                Text('Combinação $index',
-                                    style: const TextStyle(fontSize: 18, color: Colors.black)),
+                                Text('Combinação $displayIndex', style: const TextStyle(fontSize: 18, color: Colors.black)),
                                 const SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

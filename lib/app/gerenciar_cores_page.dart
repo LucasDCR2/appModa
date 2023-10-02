@@ -406,7 +406,7 @@ Widget build(BuildContext context) {
               ),
               padding: EdgeInsets.all(16),
             ),
-            child: Text('Excluir Todas as Cores'),
+            child: Text('Excluir Todas as Cores', style: TextStyle(color: Colors.white)),
           ),
           SizedBox(height: 20),
           ElevatedButton(
@@ -420,7 +420,7 @@ Widget build(BuildContext context) {
               ),
               padding: EdgeInsets.all(16),
             ),
-            child: Text('Excluir Todas as Combinações'),
+            child: Text('Excluir Todas as Combinações', style: TextStyle(color: Colors.white)),
           ),
           SizedBox(height: 40),
         ],
